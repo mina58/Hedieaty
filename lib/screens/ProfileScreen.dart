@@ -13,7 +13,7 @@ class ProfileScreen extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as bool;
 
     return Scaffold(
-      appBar: MyAppBar(theme: theme, displayProfile: !isOwnerProfile),
+      appBar: MyAppBar(displayProfile: !isOwnerProfile),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

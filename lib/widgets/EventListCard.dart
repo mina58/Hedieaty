@@ -1,51 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/routingArguments/EventScreenArguments.dart';
 
+import '../models/Event.dart';
 import 'EditButton.dart';
 import 'MyCard.dart';
 
 class EventListCard extends StatelessWidget {
   const EventListCard({
     super.key,
-    required this.theme,
     required this.isOwnerEventCard,
+    required this.event,
   });
 
-  final ThemeData theme;
   final bool isOwnerEventCard;
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     return MyCard(
-        theme: theme,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Birthday",
-                  style:
-                      TextStyle(fontSize: theme.textTheme.titleLarge!.fontSize),
-                ),
-                Text("5/8/2025"),
-              ],
-            ),
-            ...(isOwnerEventCard
-                ? [
-                    EditButton(onPressed: () {},)
-                  ]
-                : [])
-          ],
-        ),
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            "/event",
-            arguments: isOwnerEventCard,
-          );
-        });
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                event.name,
+                style:
+                    TextStyle(fontSize: theme.textTheme.titleLarge!.fontSize),
+              ),
+              Text(
+                  "${event.date.day.toString()}/${event.date.month.toString()}/${event.date.year.toString()}"),
+            ],
+          ),
+          ...(isOwnerEventCard
+              ? [
+                  EditButton(
+                    onPressed: () {},
+                  )
+                ]
+              : [])
+        ],
+      ),
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          "/event",
+          arguments: EventScreenArguments(event, isOwnerEventCard),
+        );
+      },
+    );
   }
 }
-
-

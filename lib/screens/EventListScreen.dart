@@ -1,20 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/routingArguments/EventListScreenArguments.dart';
+import 'package:hedieaty/services/EventsService.dart';
+import 'package:hedieaty/widgets/AsyncListView.dart';
 import 'package:hedieaty/widgets/MyAppBar.dart';
+import 'package:hedieaty/widgets/SortByOption.dart';
+import 'package:provider/provider.dart';
 
+import '../models/Event.dart';
 import '../widgets/AddEventButton.dart';
 import '../widgets/EventListCard.dart';
-import '../widgets/SortByOption.dart';
 import '../widgets/SortOptions.dart';
 
-class EventListScreen extends StatelessWidget {
+class EventListScreen extends StatefulWidget {
+  @override
+  State<EventListScreen> createState() => _EventListScreenState();
+}
+
+class _EventListScreenState extends State<EventListScreen> {
+  String _sortBy = "name";
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool isOwnerEventList =
-        ModalRoute.of(context)!.settings.arguments as bool;
+    final EventsService eventsService = Provider.of<EventsService>(context);
+    final EventListScreenArguments arguments =
+        ModalRoute.of(context)!.settings.arguments as EventListScreenArguments;
+    final bool isOwnerEventList = arguments.isOwnerEventList;
+    final String username = arguments.username;
+    final String userPhone = arguments.userPhone;
+    final Future<List<Event>> userEvents =
+        eventsService.getUserEvents(userPhone, _sortBy);
 
     return Scaffold(
-      appBar: MyAppBar(theme: theme, displayProfile: true),
+      appBar: MyAppBar(displayProfile: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -25,35 +43,43 @@ class EventListScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "John Doe's Events",
+                    "${username}'s Events",
                     style: TextStyle(
                         fontSize: theme.textTheme.titleLarge!.fontSize),
                   ),
-                  AddEventButton(theme: theme)
+                  AddEventButton()
                 ],
               ),
             ),
             SortOptions(
-              theme: theme,
-              options: ["name", "date", "status"],
+              options: [
+                SortByOption(text: "name", onTap: () {
+                  setState(() {
+                    _sortBy = "name";
+                  });
+                }),
+                SortByOption(text: "date", onTap: () {
+                  setState(() {
+                    _sortBy = "date";
+                  });
+                }),
+                SortByOption(text: "status", onTap: () {
+                  setState(() {
+                    _sortBy = "status";
+                  });
+                }),
+              ],
             ),
             Expanded(
-              child: ListView(
-                children: [1, 1, 1, 1, 1, 1, 1, 1]
-                    .map((_) => EventListCard(
-                          theme: theme,
-                          isOwnerEventCard: isOwnerEventList,
-                        ))
-                    .toList(),
+              child: AsyncListView(
+                future: userEvents,
+                builder: (event) => EventListCard(
+                    isOwnerEventCard: isOwnerEventList, event: event),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-
-
-

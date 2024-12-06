@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class SortToggleButton extends StatelessWidget {
   const SortToggleButton({
     super.key,
-    required this.theme,
   });
 
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,

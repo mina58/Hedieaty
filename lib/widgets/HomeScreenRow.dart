@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/widgets/AddEventButton.dart';
 
 class HomeSearchRow extends StatelessWidget {
-  const HomeSearchRow({super.key, required this.theme});
-
-  final ThemeData theme;
+  const HomeSearchRow({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -30,7 +29,7 @@ class HomeSearchRow extends StatelessWidget {
               },
               child: Icon(Icons.add),
             ),
-            AddEventButton(theme: theme)
+            AddEventButton()
 
           ],
         )
