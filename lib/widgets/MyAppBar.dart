@@ -13,7 +13,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: InkWell(
         child: Image.asset("assets/logo.png"),
         onTap: () {
-          Navigator.pushReplacementNamed(context, "/");
+          Navigator.pushNamed(context, "/");
         },
       ),
       titleTextStyle: TextStyle(

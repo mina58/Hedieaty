@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/models/Gift.dart';
+import 'package:hedieaty/routingArguments/GiftDetailsScreenArguments.dart';
 import 'package:hedieaty/services/GiftsService.dart';
 import 'package:hedieaty/widgets/EditButton.dart';
 import 'package:hedieaty/widgets/MyCard.dart';
@@ -101,7 +102,7 @@ class _GiftCardState extends State<GiftCard> {
           ],
         ),
         onTap: () {
-          Navigator.pushNamed(context, "/gift_details");
+          Navigator.pushNamed(context, "/gift_details", arguments: GiftDetailsScreenArguments(widget.gift));
         },
       ),
       ...(_isPledged

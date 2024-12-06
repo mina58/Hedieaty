@@ -1,16 +1,8 @@
 import 'package:hedieaty/models/User.dart';
 
 class Gift {
-  Gift(
-      this.id,
-      this.name,
-      this.price,
-      this.description,
-      this.eventName,
-      this.canPledge,
-      this.pledgedBy,
-      this.category,
-      );
+  Gift(this.id, this.name, this.price, this.description, this.eventName,
+      this.canPledge, this.pledgedBy, this.category, this.imageURL);
 
   final int id;
   final String name;
@@ -20,6 +12,7 @@ class Gift {
   final bool canPledge;
   final User? pledgedBy;
   final String category;
+  final String imageURL;
 
   bool get isPledged => pledgedBy != null;
 
@@ -33,7 +26,8 @@ class Gift {
       'eventName': eventName,
       'category': category,
       'canPledge': canPledge,
-      'pledgedBy': pledgedBy?.toMap(), // Convert Friend to Map if not null
+      'pledgedBy': pledgedBy?.toMap(),
+      'imageURL': imageURL, // Convert Friend to Map if not null
     };
   }
 
@@ -48,8 +42,10 @@ class Gift {
       map['canPledge'] as bool,
       map['pledgedBy'] != null
           ? User.fromMap(map['pledgedBy'] as Map<String, dynamic>)
-          : null, // Convert Map to Friend if not null
+          : null,
+      // Convert Map to Friend if not null
       map['category'] as String,
+      map['imageURL'] as String,
     );
   }
 }

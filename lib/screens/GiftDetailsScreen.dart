@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/routingArguments/GiftDetailsScreenArguments.dart';
 import 'package:hedieaty/widgets/MyAppBar.dart';
 import 'package:hedieaty/widgets/PledgeButton.dart';
+
+import '../models/Gift.dart';
 
 class GiftDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final GiftDetailsScreenArguments arguments = ModalRoute.of(context)!
+        .settings
+        .arguments as GiftDetailsScreenArguments;
+    final Gift gift = arguments.gift;
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
       body: Padding(
@@ -20,8 +27,8 @@ class GiftDetailsScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/logo.png",
+                    Image.network(
+                      gift.imageURL,
                       height: 200,
                     ),
                   ],
@@ -33,27 +40,20 @@ class GiftDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "PS5",
+                        gift.name,
                         style: TextStyle(
                             fontSize: theme.textTheme.titleLarge!.fontSize),
                       ),
                       Text(
-                        "\$100",
+                        "\$${gift.price}",
                         style: TextStyle(
                             fontSize: theme.textTheme.titleLarge!.fontSize),
                       )
                     ],
                   ),
                 ),
-                Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "),
+                Text(gift.description)
               ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [Text("For John Doe's Birthday"),
-              PledgeButton(is_pledged: false, onPressed: () {})],
             ),
           ],
         ),
