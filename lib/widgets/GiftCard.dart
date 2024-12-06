@@ -111,9 +111,8 @@ class _GiftCardState extends State<GiftCard> {
                 child: CircleAvatar(
                   radius: 15,
                   backgroundColor: theme.colorScheme.secondaryContainer,
-                  child: Icon(
-                    Icons.person,
-                    color: theme.colorScheme.onSecondaryContainer,
+                  child: CircleAvatar(
+                    child: Image.network(widget.gift.pledgedBy!.imageUrl),
                   ),
                 ),
               ),
