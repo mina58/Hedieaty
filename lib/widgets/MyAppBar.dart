@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyAppBar(
-      {super.key, required this.displayProfile});
+  const MyAppBar({super.key, required this.displayProfile});
 
   final bool displayProfile;
 
@@ -11,7 +10,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     final ThemeData theme = Theme.of(context);
     return AppBar(
       backgroundColor: theme.colorScheme.primary,
-      leading: Image.asset("assets/logo.png"),
+      leading: InkWell(
+        child: Image.asset("assets/logo.png"),
+        onTap: () {
+          Navigator.pushReplacementNamed(context, "/");
+        },
+      ),
       titleTextStyle: TextStyle(
         color: theme.colorScheme.onPrimary,
         fontSize: theme.textTheme.titleLarge!.fontSize,
@@ -26,7 +30,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Icon(Icons.person),
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, "/owner_profile", arguments: true);
+                  Navigator.pushNamed(context, "/owner_profile",
+                      arguments: true);
                 },
               )
             ]

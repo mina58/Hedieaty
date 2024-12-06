@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/routingArguments/EventListScreenArguments.dart';
+import 'package:hedieaty/routingArguments/FriendProfileScreenArguments.dart';
 import 'package:hedieaty/services/FriendsService.dart';
 import 'package:provider/provider.dart';
 
@@ -30,13 +31,18 @@ class HomeScreen extends StatelessWidget {
               builder: (friend) => HomeScreenCard(
                 friend: friend,
                 onAvatarTap: () {
-                  Navigator.pushNamed(context, "/friend_profile", arguments: false);
+                  Navigator.pushNamed(
+                    context,
+                    "/friend_profile",
+                    arguments: FriendProfileScreenArguments(friend),
+                  );
                 },
                 onTap: () {
                   Navigator.pushNamed(
                     context,
                     "/event_list",
-                    arguments: EventListScreenArguments(false, friend.name, friend.phone),
+                    arguments: EventListScreenArguments(
+                        false, friend.name, friend.phone),
                   );
                 },
               ),
