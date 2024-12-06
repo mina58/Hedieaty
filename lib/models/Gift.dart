@@ -1,4 +1,4 @@
-import 'package:hedieaty/models/Friend.dart';
+import 'package:hedieaty/models/User.dart';
 
 class Gift {
   Gift(
@@ -18,7 +18,7 @@ class Gift {
   final String description;
   final String eventName;
   final bool canPledge;
-  final Friend? pledgedBy;
+  final User? pledgedBy;
   final String category;
 
   bool get isPledged => pledgedBy != null;
@@ -47,7 +47,7 @@ class Gift {
       map['eventName'] as String,
       map['canPledge'] as bool,
       map['pledgedBy'] != null
-          ? Friend.fromMap(map['pledgedBy'] as Map<String, dynamic>)
+          ? User.fromMap(map['pledgedBy'] as Map<String, dynamic>)
           : null, // Convert Map to Friend if not null
       map['category'] as String,
     );

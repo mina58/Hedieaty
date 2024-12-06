@@ -3,17 +3,15 @@ import 'package:hedieaty/widgets/MyAppBar.dart';
 
 import '../widgets/EditButton.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class FriendProfileScreen extends StatelessWidget {
+  const FriendProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool isOwnerProfile =
-        ModalRoute.of(context)!.settings.arguments as bool;
 
     return Scaffold(
-      appBar: MyAppBar(displayProfile: !isOwnerProfile),
+      appBar: MyAppBar(displayProfile: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -38,14 +36,10 @@ class ProfileScreen extends StatelessWidget {
                         "John Doe",
                         style: theme.textTheme.headlineLarge,
                       ),
-                      ...(isOwnerProfile
-                          ? [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              EditButton(onPressed: () {})
-                            ]
-                          : []),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      EditButton(onPressed: () {}),
                     ],
                   ),
                   Row(
@@ -54,7 +48,7 @@ class ProfileScreen extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, "/event_list",
-                              arguments: isOwnerProfile);
+                              arguments: true);
                         },
                         child: Text("Events"),
                         style: ElevatedButton.styleFrom(
@@ -62,16 +56,14 @@ class ProfileScreen extends StatelessWidget {
                           foregroundColor: theme.colorScheme.onTertiary,
                         ),
                       ),
-                      ...(isOwnerProfile ? [
-                        TextButton(
-                          onPressed: () {},
-                          child: Text("Pledged"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.secondary,
-                            foregroundColor: theme.colorScheme.onSecondary,
-                          ),
-                        )
-                      ] : [])
+                      TextButton(
+                        onPressed: () {},
+                        child: Text("Pledged"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.secondary,
+                          foregroundColor: theme.colorScheme.onSecondary,
+                        ),
+                      )
                     ],
                   )
                 ],

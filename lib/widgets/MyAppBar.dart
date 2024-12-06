@@ -26,7 +26,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Icon(Icons.person),
                 ),
                 onTap: () {
-                  Navigator.pushNamed(context, "/profile", arguments: true);
+                  Navigator.pushNamed(context, "/owner_profile", arguments: true);
                 },
               )
             ]

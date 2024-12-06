@@ -1,12 +1,12 @@
-class Friend {
+class User {
   String name;
   String phone;
   String imageUrl;
   int upcomingEvents;
 
-  Friend(this.name, this.phone, this.imageUrl, this.upcomingEvents);
+  User(this.name, this.phone, this.imageUrl, this.upcomingEvents);
 
-  // Convert a Friend object to a Map
+  // Convert a User object to a Map
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -16,9 +16,9 @@ class Friend {
     };
   }
 
-  // Create a Friend object from a Map
-  factory Friend.fromMap(Map<String, dynamic> map) {
-    return Friend(
+  // Create a User object from a Map
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
       map['name'] as String,
       map['phone'] as String,
       map['imageUrl'] as String,

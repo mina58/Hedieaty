@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:hedieaty/models/Friend.dart';
+import 'package:hedieaty/models/User.dart';
 
 import '../models/Gift.dart';
 
@@ -14,7 +14,7 @@ class GiftsService {
         "very good play station five",
         "birthday",
         true,
-        Friend("John Doe", "01234", "https://avatar.iran.liara.run/public", 0),
+        User("John Doe", "01234", "https://avatar.iran.liara.run/public", 0),
         "gaming");
     final Gift g2 = Gift(
       1,
@@ -32,7 +32,7 @@ class GiftsService {
         "very good play station five",
         "birthday",
         false,
-        Friend("John Doe", "01234", "https://avatar.iran.liara.run/public", 0),
+        User("John Doe", "01234", "https://avatar.iran.liara.run/public", 0),
         "gaming");
     final Gift g4 = Gift(
         1,

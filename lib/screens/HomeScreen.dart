@@ -3,7 +3,7 @@ import 'package:hedieaty/routingArguments/EventListScreenArguments.dart';
 import 'package:hedieaty/services/FriendsService.dart';
 import 'package:provider/provider.dart';
 
-import '../models/Friend.dart';
+import '../models/User.dart';
 import '../widgets/AsyncListView.dart';
 import '../widgets/HomeScreenCard.dart';
 import '../widgets/HomeScreenRow.dart';
@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final FriendsService friendsService = Provider.of<FriendsService>(context);
-    final Future<List<Friend>> friends = friendsService.getFriends();
+    final Future<List<User>> friends = friendsService.getFriends();
     return Scaffold(
       appBar: MyAppBar(
         displayProfile: true,
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
               builder: (friend) => HomeScreenCard(
                 friend: friend,
                 onAvatarTap: () {
-                  Navigator.pushNamed(context, "/profile", arguments: false);
+                  Navigator.pushNamed(context, "/friend_profile", arguments: false);
                 },
                 onTap: () {
                   Navigator.pushNamed(

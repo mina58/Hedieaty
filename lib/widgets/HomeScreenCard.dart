@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/models/Friend.dart';
+import 'package:hedieaty/models/User.dart';
 
 import 'MyCard.dart';
 
@@ -11,7 +11,7 @@ class HomeScreenCard extends StatelessWidget {
     required this.onTap,
   });
 
-  final Friend friend;
+  final User friend;
   final void Function() onAvatarTap;
   final void Function() onTap;
 
