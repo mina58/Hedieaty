@@ -4,4 +4,22 @@ class Event {
   final int id;
   final String name;
   final DateTime date;
+
+  // Convert an Event object to a Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'date': date.toIso8601String(), // Use ISO 8601 format for DateTime
+    };
+  }
+
+  // Create an Event object from a Map
+  factory Event.fromMap(Map<String, dynamic> map) {
+    return Event(
+      map['id'] as int,
+      map['name'] as String,
+      DateTime.parse(map['date'] as String), // Parse ISO 8601 format
+    );
+  }
 }

@@ -21,16 +21,16 @@ class GiftCard extends StatefulWidget {
 }
 
 class _GiftCardState extends State<GiftCard> {
-  late bool _is_pledged;
+  late bool _isPledged;
 
   @override
   void initState() {
     super.initState();
-    _is_pledged = widget.gift.isPledged;
+    _isPledged = widget.gift.isPledged;
   }
 
   void handlePledge() async {
-    if (_is_pledged) {
+    if (_isPledged) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('This gift is already pledged'),
@@ -41,7 +41,7 @@ class _GiftCardState extends State<GiftCard> {
     if (await Provider.of<GiftsService>(context, listen: false)
         .pledgeGift(widget.gift.id)) {
       setState(() {
-        _is_pledged = true;
+        _isPledged = true;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,7 +53,7 @@ class _GiftCardState extends State<GiftCard> {
   }
 
   void handleEdit() {
-    if (_is_pledged) {
+    if (_isPledged) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('This gift is already pledged'),
@@ -90,7 +90,7 @@ class _GiftCardState extends State<GiftCard> {
                 ...(!widget.isOwnerGiftCard
                     ? [
                         PledgeButton(
-                          is_pledged: _is_pledged,
+                          is_pledged: _isPledged,
                           onPressed: this.handlePledge,
                         )
                       ]
@@ -104,7 +104,7 @@ class _GiftCardState extends State<GiftCard> {
           Navigator.pushNamed(context, "/gift_details");
         },
       ),
-      ...(_is_pledged
+      ...(_isPledged
           ? [
               Transform.rotate(
                 angle: -0.3,
