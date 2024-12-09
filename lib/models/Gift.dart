@@ -1,14 +1,15 @@
+import 'package:hedieaty/models/Event.dart';
 import 'package:hedieaty/models/User.dart';
 
 class Gift {
-  Gift(this.id, this.name, this.price, this.description, this.eventName,
+  Gift(this.id, this.name, this.price, this.description, this.event,
       this.canPledge, this.pledgedBy, this.category, this.imageURL);
 
   final int id;
   final String name;
   final int price;
   final String description;
-  final String eventName;
+  final Event event;
   final bool canPledge;
   final User? pledgedBy;
   final String category;
@@ -23,7 +24,7 @@ class Gift {
       'name': name,
       'price': price,
       'description': description,
-      'eventName': eventName,
+      'eventName': event.toMap(),
       'category': category,
       'canPledge': canPledge,
       'pledgedBy': pledgedBy?.toMap(),
@@ -38,7 +39,7 @@ class Gift {
       map['name'] as String,
       map['price'] as int,
       map['description'] as String,
-      map['eventName'] as String,
+      Event.fromMap(map["event"] as Map<String, dynamic>),
       map['canPledge'] as bool,
       map['pledgedBy'] != null
           ? User.fromMap(map['pledgedBy'] as Map<String, dynamic>)

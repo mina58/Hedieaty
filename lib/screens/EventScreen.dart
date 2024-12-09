@@ -29,7 +29,7 @@ class _EventScreenState extends State<EventScreen> {
     final GiftsService giftsService = Provider.of<GiftsService>(context);
     final bool isOwnerEvent = arguments.isOwnerEvent;
     final Event event = arguments.event;
-    final Future<List<Gift>> gifts = giftsService.getGifts(event.id, _sortBy);
+    final Future<List<Gift>> gifts = giftsService.getEventGifts(event.id, _sortBy);
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),

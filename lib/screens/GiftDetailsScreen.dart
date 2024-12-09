@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/routingArguments/GiftDetailsScreenArguments.dart';
 import 'package:hedieaty/widgets/MyAppBar.dart';
-import 'package:hedieaty/widgets/PledgeButton.dart';
 
 import '../models/Gift.dart';
 
