@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MyAppBar({super.key, required this.displayProfile});
+  const MyAppBar({
+    super.key,
+    required this.displayProfile,
+    this.showLogoutButton = true, // Default to true
+  });
 
   final bool displayProfile;
+  final bool showLogoutButton;
 
   @override
   Widget build(BuildContext context) {
@@ -13,32 +19,42 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: InkWell(
         child: Image.asset("assets/logo.png"),
         onTap: () {
-          Navigator.pushNamed(context, "/");
+          if (FirebaseAuth.instance.currentUser != null) {
+            Navigator.pushNamed(context, "/");
+          } else {
+            Navigator.pushNamed(context, "/login");
+          }
         },
       ),
       titleTextStyle: TextStyle(
         color: theme.colorScheme.onPrimary,
         fontSize: theme.textTheme.titleLarge!.fontSize,
       ),
-      title: Text(
+      title: const Text(
         "Hedieaty",
       ),
-      actions: displayProfile
-          ? [
-              InkWell(
-                child: CircleAvatar(
-                  child: Icon(Icons.person),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, "/owner_profile",
-                      arguments: true);
-                },
-              )
-            ]
-          : [],
+      actions: [
+        if (displayProfile)
+          InkWell(
+            child: const CircleAvatar(
+              child: Icon(Icons.person),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, "/owner_profile", arguments: true);
+            },
+          ),
+        if (showLogoutButton)
+          IconButton(
+            icon: Icon(Icons.logout, color: theme.colorScheme.onPrimary,),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushNamedAndRemoveUntil(context, "/login", (_) => false);
+            },
+          ),
+      ],
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

@@ -1,18 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/screens/EventListScreen.dart';
 import 'package:hedieaty/screens/EventScreen.dart';
 import 'package:hedieaty/screens/FriendProfileScreen.dart';
 import 'package:hedieaty/screens/GiftDetailsScreen.dart';
 import 'package:hedieaty/screens/HomeScreen.dart';
+import 'package:hedieaty/screens/LoginScreen.dart';
 import 'package:hedieaty/screens/OwnerProfileScreen.dart';
 import 'package:hedieaty/screens/PledgedGiftsScreen.dart';
+import 'package:hedieaty/screens/SignupScreen.dart';
 import 'package:hedieaty/services/EventsService.dart';
 import 'package:hedieaty/services/FriendsService.dart';
 import 'package:hedieaty/services/GiftsService.dart';
 import 'package:hedieaty/services/OwnerUserService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [
@@ -31,7 +37,9 @@ void main() {
         Provider<ThemeData>(
           create: (_) => ThemeData(
             colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.blue, brightness: Brightness.dark),
+              seedColor: Colors.blue,
+              brightness: Brightness.dark,
+            ),
             useMaterial3: true,
             textTheme: TextTheme(),
           ),
@@ -51,15 +59,41 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark,
       title: 'Flutter Navigation Demo',
       initialRoute: '/',
-      // The default route when the app starts
       routes: {
-        '/': (context) => HomeScreen(),
         '/event_list': (context) => EventListScreen(),
         '/event': (context) => EventScreen(),
         "/gift_details": (context) => GiftDetailsScreen(),
         "/owner_profile": (context) => OwnerProfileScreen(),
         "/friend_profile": (context) => FriendProfileScreen(),
         "/pledged_gifts": (context) => PledgedGiftsScreen(),
+        "/login": (context) => LoginScreen(),
+        "/signup": (context) => SignupScreen(),
+      },
+      home: AuthWrapper(), // Use AuthWrapper to decide the initial screen
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // Show a loading indicator while checking auth state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        // If the user is logged in, show HomeScreen
+        if (snapshot.hasData) {
+          return HomeScreen();
+        }
+
+        // Otherwise, show the LoginScreen
+        return LoginScreen();
       },
     );
   }
