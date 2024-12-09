@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login successful!')),
         );
-        Navigator.pushReplacementNamed(context, "/");
+        Navigator.pushNamed(context, "/");
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login failed')),
@@ -66,9 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushNamed(
                     context,
-                    MaterialPageRoute(builder: (context) => SignupScreen()),
+                    "/signup",
                   );
                 },
                 child: Text('Don\'t have an account? Sign up'),
