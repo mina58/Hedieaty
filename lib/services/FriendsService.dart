@@ -26,8 +26,9 @@ class FriendsService {
     if (query.isEmpty) {
       return List<User>.from(_allFriends);
     }
-    return _allFriends.where((friend) =>
-        friend.name.toLowerCase().contains(query.toLowerCase())).toList();
+    return _allFriends
+        .where(
+            (friend) => friend.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 }
-

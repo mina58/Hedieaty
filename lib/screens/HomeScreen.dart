@@ -22,9 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final FriendsService friendsService =
-        Provider.of<FriendsService>(context, listen: false);
-    _friendsFuture = friendsService.getFriends();
+    _loadFriends();
   }
 
   void _searchFriends(String query) {
@@ -33,6 +31,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _friendsFuture = friendsService.searchFriends(query);
     });
+  }
+
+  void _loadFriends() {
+    final FriendsService friendsService =
+        Provider.of<FriendsService>(context, listen: false);
+    _friendsFuture = friendsService.getFriends();
   }
 
   @override
@@ -48,6 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: HomeSearchRow(
               controller: _searchController,
               onSearchChanged: _searchFriends,
+              onAddFriend: () {
+                setState(() {
+                  _loadFriends();
+                });
+              },
             ),
           ),
           Expanded(
