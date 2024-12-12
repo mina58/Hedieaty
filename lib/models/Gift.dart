@@ -49,4 +49,28 @@ class Gift {
       map['imageURL'] as String,
     );
   }
+
+  Gift copyWith({
+    int? id,
+    String? name,
+    int? price,
+    String? description,
+    Event? event,
+    bool? canPledge,
+    User? pledgedBy,
+    String? category,
+    String? imageURL,
+  }) {
+    return Gift(
+      id ?? this.id,
+      name ?? this.name,
+      price ?? this.price,
+      description ?? this.description,
+      event ?? this.event,
+      canPledge ?? this.canPledge,
+      pledgedBy ?? this.pledgedBy,
+      category ?? this.category,
+      imageURL ?? this.imageURL,
+    );
+  }
 }
