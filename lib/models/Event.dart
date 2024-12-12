@@ -10,7 +10,7 @@ class Event {
     return {
       'id': id,
       'name': name,
-      'date': date.toIso8601String(), // Use ISO 8601 format for DateTime
+      'date': date.toIso8601String(),
     };
   }
 
@@ -19,7 +19,7 @@ class Event {
     return Event(
       map['id'] as int,
       map['name'] as String,
-      DateTime.parse(map['date'] as String), // Parse ISO 8601 format
+      DateTime.parse(map['date'] as String),
     );
   }
 }

@@ -53,28 +53,37 @@ class _EventListScreenState extends State<EventListScreen> {
             ),
             SortOptions(
               options: [
-                SortByOption(text: "name", onTap: () {
-                  setState(() {
-                    _sortBy = "name";
-                  });
-                }),
-                SortByOption(text: "date", onTap: () {
-                  setState(() {
-                    _sortBy = "date";
-                  });
-                }),
-                SortByOption(text: "status", onTap: () {
-                  setState(() {
-                    _sortBy = "status";
-                  });
-                }),
+                SortByOption(
+                    text: "name",
+                    onTap: () {
+                      setState(() {
+                        _sortBy = "name";
+                      });
+                    }),
+                SortByOption(
+                    text: "date",
+                    onTap: () {
+                      setState(() {
+                        _sortBy = "date";
+                      });
+                    }),
+                SortByOption(
+                    text: "status",
+                    onTap: () {
+                      setState(() {
+                        _sortBy = "status";
+                      });
+                    }),
               ],
             ),
             Expanded(
               child: AsyncListView(
                 future: userEvents,
                 builder: (event) => EventListCard(
-                    isOwnerEventCard: isOwnerEventList, event: event),
+                  isOwnerEventCard: isOwnerEventList,
+                  event: event,
+                  username: username,
+                ),
               ),
             ),
           ],

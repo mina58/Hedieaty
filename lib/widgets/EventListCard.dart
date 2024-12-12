@@ -10,10 +10,12 @@ class EventListCard extends StatelessWidget {
     super.key,
     required this.isOwnerEventCard,
     required this.event,
+    required this.username,
   });
 
   final bool isOwnerEventCard;
   final Event event;
+  final String username;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class EventListCard extends StatelessWidget {
         Navigator.pushNamed(
           context,
           "/event",
-          arguments: EventScreenArguments(event, isOwnerEventCard),
+          arguments: EventScreenArguments(event, isOwnerEventCard, username),
         );
       },
     );
