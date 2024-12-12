@@ -1,11 +1,24 @@
+import 'dart:math';
 import 'package:hedieaty/models/Event.dart';
 
 class EventsService {
-  Future<List<Event>> getUserEvents (String phone, String sortBy) async{
+  final List<Event> _events = [];
+
+  Future<List<Event>> getUserEvents(String phone, String sortBy) async {
     await Future.delayed(const Duration(seconds: 2));
     Event e1 = Event(1, "birthday", DateTime.parse("2025-08-05"));
     Event e2 = Event(2, "birthday", DateTime.parse("2025-08-05"));
     Event e3 = Event(3, "birthday", DateTime.parse("2025-08-05"));
-    return [e1, e2, e3];
+    return _events.isNotEmpty ? _events : [e1, e2, e3];
+  }
+
+  /// Randomly throws an exception 30% of the time to simulate a failure.
+  Future<void> addEvent(String name, DateTime date) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final random = Random();
+    if (random.nextDouble() < 0.3) {
+      throw Exception("Failed to create event due to a server error.");
+    }
+    _events.add(Event(_events.length + 1, name, date));
   }
 }
