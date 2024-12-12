@@ -7,14 +7,36 @@ import 'package:provider/provider.dart';
 import '../models/User.dart';
 import '../widgets/AsyncListView.dart';
 import '../widgets/HomeScreenCard.dart';
-import '../widgets/HomeScreenRow.dart';
+import '../widgets/HomeSearchRow.dart';
 import '../widgets/MyAppBar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  late Future<List<User>> _friendsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    final FriendsService friendsService =
+        Provider.of<FriendsService>(context, listen: false);
+    _friendsFuture = friendsService.getFriends();
+  }
+
+  void _searchFriends(String query) {
+    final FriendsService friendsService =
+        Provider.of<FriendsService>(context, listen: false);
+    setState(() {
+      _friendsFuture = friendsService.searchFriends(query);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final FriendsService friendsService = Provider.of<FriendsService>(context);
-    final Future<List<User>> friends = friendsService.getFriends();
     return Scaffold(
       appBar: MyAppBar(
         displayProfile: true,
@@ -23,11 +45,14 @@ class HomeScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: HomeSearchRow(),
+            child: HomeSearchRow(
+              controller: _searchController,
+              onSearchChanged: _searchFriends,
+            ),
           ),
           Expanded(
             child: AsyncListView(
-              future: friends,
+              future: _friendsFuture,
               builder: (friend) => HomeScreenCard(
                 friend: friend,
                 onAvatarTap: () {
@@ -42,12 +67,15 @@ class HomeScreen extends StatelessWidget {
                     context,
                     "/event_list",
                     arguments: EventListScreenArguments(
-                        false, friend.name, friend.phone),
+                      false,
+                      friend.name,
+                      friend.phone,
+                    ),
                   );
                 },
               ),
             ),
-          )
+          ),
         ],
       ),
     );
