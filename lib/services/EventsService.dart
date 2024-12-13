@@ -13,13 +13,15 @@ class EventsService {
   }
 
   /// Randomly throws an exception 30% of the time to simulate a failure.
-  Future<void> addEvent(String name, DateTime date) async {
+  Future<Event> addEvent(String name, DateTime date) async {
     await Future.delayed(const Duration(milliseconds: 500));
     final random = Random();
     if (random.nextDouble() < 0.3) {
       throw Exception("Failed to create event due to a server error.");
     }
-    _events.add(Event(_events.length + 1, name, date));
+    Event event = Event(_events.length + 1, name, date);
+    _events.add(event);
+    return event;
   }
 
   Future<void> editEvent(int eventId, String name, DateTime date) async{

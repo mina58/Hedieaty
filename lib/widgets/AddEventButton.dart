@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/routingArguments/EventScreenArguments.dart';
+import 'package:hedieaty/services/OwnerUserService.dart';
 import 'package:provider/provider.dart';
+import '../models/Event.dart';
+import '../models/User.dart';
 import '../services/EventsService.dart';
 
 class AddEventButton extends StatelessWidget {
@@ -56,8 +60,10 @@ class AddEventButton extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        "Selected Date: ${_selectedDate!.toLocal()}".split(' ')[0],
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        "Selected Date: ${_selectedDate!.toLocal()}"
+                            .split(' ')[0],
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                 ],
@@ -73,15 +79,23 @@ class AddEventButton extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                if (_formKey.currentState?.validate() == true && _selectedDate != null) {
-                  final eventsService = Provider.of<EventsService>(context, listen: false);
+                if (_formKey.currentState?.validate() == true &&
+                    _selectedDate != null) {
+                  final eventsService =
+                      Provider.of<EventsService>(context, listen: false);
                   try {
-                    await eventsService.addEvent(
+                    Event event = await eventsService.addEvent(
                       _eventNameController.text.trim(),
                       _selectedDate!,
                     );
                     _eventNameController.clear();
+                    User owner = await Provider.of<OwnerUserService>(context,
+                            listen: false)
+                        .getOwner();
                     Navigator.of(context).pop();
+                    Navigator.pushNamed(context, "/event",
+                        arguments:
+                            EventScreenArguments(event, true, owner.name));
                   } catch (e) {
                     // Show error message if event creation fails
                     ScaffoldMessenger.of(context).showSnackBar(
