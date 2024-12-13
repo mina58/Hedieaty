@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/models/Gift.dart';
 import 'package:hedieaty/routingArguments/GiftDetailsScreenArguments.dart';
 import 'package:hedieaty/services/GiftsService.dart';
+import 'package:hedieaty/services/OwnerUserService.dart';
 import 'package:hedieaty/widgets/EditButton.dart';
 import 'package:hedieaty/widgets/MyCard.dart';
 import 'package:provider/provider.dart';
 import 'PledgeButton.dart';
 
 class GiftCard extends StatefulWidget {
-  const GiftCard({
+  GiftCard({
     super.key,
     required this.isOwnerGiftCard,
     required this.gift,
   });
 
   final bool isOwnerGiftCard;
-  final Gift gift;
+  Gift gift;
 
   @override
   State<GiftCard> createState() => _GiftCardState();
@@ -151,8 +152,11 @@ class _GiftCardState extends State<GiftCard> {
 
     final giftsService = Provider.of<GiftsService>(context, listen: false);
     if (await giftsService.pledgeGift(widget.gift.id)) {
+      final owner = await Provider.of<OwnerUserService>(context, listen: false)
+          .getOwner();
       setState(() {
         _isPledged = true;
+        widget.gift = widget.gift.copyWith(pledgedBy: owner);
       });
     } else {
       _showSnackBar("Failed to pledge gift");
@@ -188,8 +192,7 @@ class _GiftCardState extends State<GiftCard> {
                     EditButton(onPressed: _handleEdit)
                   else
                     PledgeButton(
-                        isPledged: _isPledged,
-                        onPressed: _handlePledge),
+                        isPledged: _isPledged, onPressed: _handlePledge),
                   Text("\$${widget.gift.price}"),
                 ],
               ),
