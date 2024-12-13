@@ -53,7 +53,7 @@ class GiftsService {
 
   Future<List<Gift>> getEventGifts(int eventId, String sortBy) async {
     await Future.delayed(const Duration(seconds: 2));
-    return _gifts.where((gift) => gift.event.id == eventId).toList();
+    return _gifts;
   }
 
   Future<void> addGift({

@@ -19,7 +19,6 @@ class EventListCard extends StatefulWidget {
   final Event event;
   final String username;
 
-
   @override
   State<EventListCard> createState() => _EventListCardState();
 }
@@ -28,9 +27,9 @@ class _EventListCardState extends State<EventListCard> {
   bool _isPublishing = false;
   late bool _isPublished;
 
-
   @override
   void initState() {
+    super.initState();
     _isPublished = widget.event.isPublished;
   }
 
@@ -81,7 +80,8 @@ class _EventListCardState extends State<EventListCard> {
                 Padding(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Chip(
-                    label: Text("Published", style: TextStyle(color: theme.colorScheme.onSecondary)),
+                    label: Text("Published",
+                        style: TextStyle(color: theme.colorScheme.onSecondary)),
                     backgroundColor: theme.colorScheme.secondary,
                   ),
                 ),
@@ -91,12 +91,15 @@ class _EventListCardState extends State<EventListCard> {
             _isPublishing
                 ? CircularProgressIndicator()
                 : PublishButton(onPressed: _publishEvent)
+          else if (widget.isOwnerEventCard && _isPublished)
+            Icon(Icons.check_circle,
+                color: Theme.of(context).colorScheme.primary)
         ],
       ),
       onTap: () {
         Navigator.pushNamed(
           context,
-          "/event_screen",
+          "/event",
           arguments: EventScreenArguments(
             widget.event,
             widget.isOwnerEventCard,
