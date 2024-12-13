@@ -39,15 +39,19 @@ class _GiftCardState extends State<GiftCard> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _showEditGiftDialog() {
     final _formKey = GlobalKey<FormState>();
     final _nameController = TextEditingController(text: widget.gift.name);
-    final _priceController = TextEditingController(text: widget.gift.price.toString());
-    final _descriptionController = TextEditingController(text: widget.gift.description);
-    final _categoryController = TextEditingController(text: widget.gift.category);
+    final _priceController =
+        TextEditingController(text: widget.gift.price.toString());
+    final _descriptionController =
+        TextEditingController(text: widget.gift.description);
+    final _categoryController =
+        TextEditingController(text: widget.gift.category);
 
     showDialog(
       context: context,
@@ -118,7 +122,8 @@ class _GiftCardState extends State<GiftCard> {
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState?.validate() == true) {
-                  final giftsService = Provider.of<GiftsService>(context, listen: false);
+                  final giftsService =
+                      Provider.of<GiftsService>(context, listen: false);
                   await giftsService.updateGift(
                     giftId: widget.gift.id,
                     name: _nameController.text.trim(),
@@ -136,6 +141,22 @@ class _GiftCardState extends State<GiftCard> {
         );
       },
     );
+  }
+
+  Future<void> _handlePledge() async {
+    if (_isPledged) {
+      _showSnackBar("Gift is already pledged");
+      return;
+    }
+
+    final giftsService = Provider.of<GiftsService>(context, listen: false);
+    if (await giftsService.pledgeGift(widget.gift.id)) {
+      setState(() {
+        _isPledged = true;
+      });
+    } else {
+      _showSnackBar("Failed to pledge gift");
+    }
   }
 
   @override
@@ -164,7 +185,11 @@ class _GiftCardState extends State<GiftCard> {
               Column(
                 children: [
                   if (widget.isOwnerGiftCard)
-                    EditButton(onPressed: _handleEdit),
+                    EditButton(onPressed: _handleEdit)
+                  else
+                    PledgeButton(
+                        isPledged: _isPledged,
+                        onPressed: _handlePledge),
                   Text("\$${widget.gift.price}"),
                 ],
               ),
@@ -185,7 +210,8 @@ class _GiftCardState extends State<GiftCard> {
               radius: 15,
               backgroundColor: theme.colorScheme.secondaryContainer,
               child: CircleAvatar(
-                child: Image.network(widget.gift.pledgedBy!.imageUrl),
+                child: Image.network(widget.gift.pledgedBy?.imageUrl ??
+                    "https://avatar.iran.liara.run/public/default_avatar.png"),
               ),
             ),
           ),
