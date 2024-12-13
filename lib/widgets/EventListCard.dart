@@ -36,13 +36,6 @@ class EventListCard extends StatelessWidget {
                   "${event.date.day.toString()}/${event.date.month.toString()}/${event.date.year.toString()}"),
             ],
           ),
-          ...(isOwnerEventCard
-              ? [
-                  EditButton(
-                    onPressed: () {},
-                  )
-                ]
-              : [])
         ],
       ),
       onTap: () {

@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../models/Event.dart';
 import '../models/Gift.dart';
+import '../services/EventsService.dart';
 import '../widgets/SortByOption.dart';
 
 class EventScreen extends StatefulWidget {
@@ -105,7 +106,7 @@ class EventScreenHeader extends StatelessWidget {
         if (isOwnerEvent)
           Row(
             children: [
-              EditButton(onPressed: () {}),
+              EditButton(onPressed: () => _showEditEventForm(context, event)),
               IconButton(
                 icon: Icon(Icons.add),
                 tooltip: "Add Gift",
@@ -114,6 +115,96 @@ class EventScreenHeader extends StatelessWidget {
             ],
           ),
       ],
+    );
+  }
+
+  void _showEditEventForm(BuildContext context, Event event) {
+    final _formKey = GlobalKey<FormState>();
+    final _nameController = TextEditingController(text: event.name);
+    DateTime _selectedDate = event.date;
+
+    Future<void> _pickDate() async {
+      final DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100),
+      );
+      if (pickedDate != null) {
+        _selectedDate = pickedDate;
+      }
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Event'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: InputDecoration(labelText: 'Event Name'),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter an event name';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _pickDate,
+                  child: Text("Select Date"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "Selected Date: ${_selectedDate.toLocal()}".split(' ')[0],
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_formKey.currentState?.validate() == true) {
+                  try {
+                    final eventService =
+                    Provider.of<EventsService>(context, listen: false);
+                    await eventService.editEvent(
+                      event.id,
+                      _nameController.text.trim(),
+                      _selectedDate,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Event updated successfully')),
+                    );
+                    Navigator.of(context).pop();
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to update event: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: Text('Save Changes'),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -34,21 +34,24 @@ class GiftDetailsScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        gift.name,
-                        style: TextStyle(
-                            fontSize: theme.textTheme.titleLarge!.fontSize),
-                      ),
-                      Text(
-                        "\$${gift.price}",
-                        style: TextStyle(
-                            fontSize: theme.textTheme.titleLarge!.fontSize),
-                      )
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          gift.name,
+                          style: TextStyle(
+                              fontSize: theme.textTheme.titleLarge!.fontSize),
+                        ),
+                        Text(
+                          "\$${gift.price}",
+                          style: TextStyle(
+                              fontSize: theme.textTheme.titleLarge!.fontSize),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Text(gift.description)
