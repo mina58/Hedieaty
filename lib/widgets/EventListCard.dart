@@ -1,25 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/models/Event.dart';
 import 'package:hedieaty/routingArguments/EventScreenArguments.dart';
+import 'package:hedieaty/services/EventsService.dart';
+import 'package:hedieaty/widgets/MyCard.dart';
+import 'package:provider/provider.dart';
 
-import '../models/Event.dart';
-import 'EditButton.dart';
-import 'MyCard.dart';
+import 'PublishButton.dart';
 
-class EventListCard extends StatelessWidget {
+class EventListCard extends StatefulWidget {
   const EventListCard({
-    super.key,
+    Key? key,
     required this.isOwnerEventCard,
     required this.event,
     required this.username,
-  });
+  }) : super(key: key);
 
   final bool isOwnerEventCard;
   final Event event;
   final String username;
 
+
+  @override
+  State<EventListCard> createState() => _EventListCardState();
+}
+
+class _EventListCardState extends State<EventListCard> {
+  bool _isPublishing = false;
+  late bool _isPublished;
+
+
+  @override
+  void initState() {
+    _isPublished = widget.event.isPublished;
+  }
+
+  Future<void> _publishEvent() async {
+    setState(() {
+      _isPublishing = true;
+    });
+    try {
+      final eventsService = Provider.of<EventsService>(context, listen: false);
+      await eventsService.publishEvent(widget.event.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Event published successfully')),
+      );
+      setState(() {
+        _isPublishing = false;
+        _isPublished = true;
+      });
+    } catch (e) {
+      setState(() {
+        _isPublishing = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to publish event: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
+
     return MyCard(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,21 +70,38 @@ class EventListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                event.name,
-                style:
-                    TextStyle(fontSize: theme.textTheme.titleLarge!.fontSize),
+                widget.event.name,
+                style: theme.textTheme.titleLarge,
               ),
               Text(
-                  "${event.date.day.toString()}/${event.date.month.toString()}/${event.date.year.toString()}"),
+                "${widget.event.date.day}/${widget.event.date.month}/${widget.event.date.year}",
+                style: theme.textTheme.bodyLarge,
+              ),
+              if (widget.event.isPublished)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Chip(
+                    label: Text("Published", style: TextStyle(color: theme.colorScheme.onSecondary)),
+                    backgroundColor: theme.colorScheme.secondary,
+                  ),
+                ),
             ],
           ),
+          if (widget.isOwnerEventCard && !_isPublished)
+            _isPublishing
+                ? CircularProgressIndicator()
+                : PublishButton(onPressed: _publishEvent)
         ],
       ),
       onTap: () {
         Navigator.pushNamed(
           context,
-          "/event",
-          arguments: EventScreenArguments(event, isOwnerEventCard, username),
+          "/event_screen",
+          arguments: EventScreenArguments(
+            widget.event,
+            widget.isOwnerEventCard,
+            widget.username,
+          ),
         );
       },
     );

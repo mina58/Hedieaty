@@ -28,4 +28,8 @@ class EventsService {
     await Future.delayed(const Duration(milliseconds: 500));
     return;
   }
+
+  Future<void> publishEvent(int eventId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
 }

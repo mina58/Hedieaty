@@ -24,12 +24,12 @@ class _EventListScreenState extends State<EventListScreen> {
     final theme = Theme.of(context);
     final EventsService eventsService = Provider.of<EventsService>(context);
     final EventListScreenArguments arguments =
-        ModalRoute.of(context)!.settings.arguments as EventListScreenArguments;
+    ModalRoute.of(context)!.settings.arguments as EventListScreenArguments;
     final bool isOwnerEventList = arguments.isOwnerEventList;
     final String username = arguments.username;
     final String userPhone = arguments.userPhone;
     final Future<List<Event>> userEvents =
-        eventsService.getUserEvents(userPhone, _sortBy);
+    eventsService.getUserEvents(userPhone, _sortBy);
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
@@ -47,7 +47,7 @@ class _EventListScreenState extends State<EventListScreen> {
                     style: TextStyle(
                         fontSize: theme.textTheme.titleLarge!.fontSize),
                   ),
-                  AddEventButton()
+                  AddEventButton(),
                 ],
               ),
             ),
