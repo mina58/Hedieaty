@@ -1,9 +1,10 @@
 class Event {
-  Event(this.id, this.name, this.date);
+  Event(this.id, this.name, this.date, this.isPublished);
 
   final int id;
   final String name;
   final DateTime date;
+  final bool isPublished;
 
   // Convert an Event object to a Map
   Map<String, dynamic> toMap() {
@@ -11,6 +12,7 @@ class Event {
       'id': id,
       'name': name,
       'date': date.toIso8601String(),
+      'isPublished': isPublished,
     };
   }
 
@@ -20,6 +22,7 @@ class Event {
       map['id'] as int,
       map['name'] as String,
       DateTime.parse(map['date'] as String),
+      map['isPublished'] as bool,
     );
   }
 }

@@ -6,9 +6,9 @@ class EventsService {
 
   Future<List<Event>> getUserEvents(String phone, String sortBy) async {
     await Future.delayed(const Duration(seconds: 2));
-    Event e1 = Event(1, "birthday", DateTime.parse("2025-08-05"));
-    Event e2 = Event(2, "birthday", DateTime.parse("2025-08-05"));
-    Event e3 = Event(3, "birthday", DateTime.parse("2025-08-05"));
+    Event e1 = Event(1, "birthday", DateTime.parse("2025-08-05"), false);
+    Event e2 = Event(2, "birthday", DateTime.parse("2025-08-05"), false);
+    Event e3 = Event(3, "birthday", DateTime.parse("2025-08-05"), false);
     return _events.isNotEmpty ? _events : [e1, e2, e3];
   }
 
@@ -19,7 +19,7 @@ class EventsService {
     if (random.nextDouble() < 0.3) {
       throw Exception("Failed to create event due to a server error.");
     }
-    Event event = Event(_events.length + 1, name, date);
+    Event event = Event(_events.length + 1, name, date, false);
     _events.add(event);
     return event;
   }
