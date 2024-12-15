@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/repositories/UserRepository.dart';
 import 'package:hedieaty/screens/EventListScreen.dart';
 import 'package:hedieaty/screens/EventScreen.dart';
 import 'package:hedieaty/screens/FriendProfileScreen.dart';
@@ -22,17 +23,21 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider<FriendsService>(
-          create: (_) => FriendsService(),
+        Provider(
+          create: (_) => UserRepository(),
         ),
+        Provider<OwnerUserService>(
+          create: (_) => OwnerUserService(),
+        ),
+        ProxyProvider2<OwnerUserService, UserRepository, FriendsService>(
+            update: (create, ownerUserService, userRepository, previous) {
+          return FriendsService(ownerUserService.getOwner(), userRepository);
+        }),
         Provider<EventsService>(
           create: (_) => EventsService(),
         ),
         Provider<GiftsService>(
           create: (_) => GiftsService(),
-        ),
-        Provider<OwnerUserService>(
-          create: (_) => OwnerUserService(),
         ),
         Provider<ThemeData>(
           create: (_) => ThemeData(

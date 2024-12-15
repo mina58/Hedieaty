@@ -1,7 +1,15 @@
+import 'package:hedieaty/repositories/UserRepository.dart';
+import 'package:hedieaty/services/OwnerUserService.dart';
+import 'package:provider/provider.dart';
+
 import '../models/User.dart';
 
 class FriendsService {
-  final List<User> _allFriends = [
+  FriendsService(this._ownerFuture, this._userRepository);
+
+  final Future<User> _ownerFuture;
+  final UserRepository _userRepository;
+  var _allFriends = [
     User(
       "Alice Johnson",
       "1234567890",
@@ -35,25 +43,23 @@ class FriendsService {
   ];
 
   Future<List<User>> getFriends() async {
-    await Future.delayed(const Duration(seconds: 2));
-    // Return a copy of the list
-    return List<User>.from(_allFriends);
+    final owner = await _ownerFuture;
+    return await _userRepository.getUserFriends(owner.phone);
   }
 
   Future<void> addFriend(String name, String phone) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    _allFriends.add(
-      User(
-        name,
-        phone,
-        "https://avatar.iran.liara.run/public/default_avatar.png",
-        _allFriends.length + 1,
-      ),
-    );
+    final owner = await _ownerFuture;
+    final friend = await _userRepository.getUserByPhone(phone);
+
+    if (friend == null) {
+      throw Exception("User not found");
+    }
+
+    await _userRepository.addFriend(owner, friend);
   }
 
   Future<List<User>> searchFriends(String query) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    _allFriends = await getFriends();
     if (query.isEmpty) {
       return List<User>.from(_allFriends);
     }

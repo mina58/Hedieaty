@@ -81,15 +81,34 @@ class _HomeSearchRowState extends State<HomeSearchRow> {
                 if (_formKey.currentState?.validate() == true) {
                   final friendsService =
                       Provider.of<FriendsService>(context, listen: false);
-                  await friendsService.addFriend(
-                    _nameController.text.trim(),
-                    _phoneController.text.trim(),
-                  );
-                  // Clear controllers after adding
-                  _nameController.clear();
-                  _phoneController.clear();
-                  Navigator.of(context).pop();
-                  widget.onAddFriend();
+
+                  try {
+                    await friendsService.addFriend(
+                      _nameController.text.trim(),
+                      _phoneController.text.trim(),
+                    );
+
+                    // Clear controllers after adding
+                    _nameController.clear();
+                    _phoneController.clear();
+
+                    // Dismiss the dialog
+                    Navigator.of(context).pop();
+
+                    // Refresh friends list or perform additional actions
+                    widget.onAddFriend();
+
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Friend added successfully!')),
+                    );
+                  } catch (e) {
+                    // Show error message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("User not found")),
+                    );
+                    Navigator.pop(context);
+                  }
                 }
               },
               child: Text('Add Friend'),
