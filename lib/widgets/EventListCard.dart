@@ -13,11 +13,13 @@ class EventListCard extends StatefulWidget {
     required this.isOwnerEventCard,
     required this.event,
     required this.username,
+    required this.onPublish
   }) : super(key: key);
 
   final bool isOwnerEventCard;
   final Event event;
   final String username;
+  final void Function() onPublish;
 
   @override
   State<EventListCard> createState() => _EventListCardState();
@@ -47,6 +49,7 @@ class _EventListCardState extends State<EventListCard> {
         _isPublishing = false;
         _isPublished = true;
       });
+      widget.onPublish();
     } catch (e) {
       setState(() {
         _isPublishing = false;

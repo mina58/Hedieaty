@@ -18,18 +18,32 @@ class EventListScreen extends StatefulWidget {
 
 class _EventListScreenState extends State<EventListScreen> {
   String _sortBy = "name";
+  late Future<List<Event>> userEvents;
+  late String userPhone;
+  late EventsService eventsService;
+  late String username;
+  late bool isOwnerEventList;
+
+  void _onPublish() {
+    setState(() {
+      _loadEvents();
+    });
+  }
+
+  void _loadEvents() {
+    userEvents = eventsService.getUserEvents(userPhone, _sortBy);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final EventsService eventsService = Provider.of<EventsService>(context);
+    eventsService = Provider.of<EventsService>(context);
     final EventListScreenArguments arguments =
-    ModalRoute.of(context)!.settings.arguments as EventListScreenArguments;
-    final bool isOwnerEventList = arguments.isOwnerEventList;
-    final String username = arguments.username;
-    final String userPhone = arguments.userPhone;
-    final Future<List<Event>> userEvents =
-    eventsService.getUserEvents(userPhone, _sortBy);
+        ModalRoute.of(context)!.settings.arguments as EventListScreenArguments;
+    isOwnerEventList = arguments.isOwnerEventList;
+    username = arguments.username;
+    userPhone = arguments.userPhone;
+    _loadEvents();
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
@@ -83,6 +97,7 @@ class _EventListScreenState extends State<EventListScreen> {
                   isOwnerEventCard: isOwnerEventList,
                   event: event,
                   username: username,
+                  onPublish: _onPublish,
                 ),
               ),
             ),

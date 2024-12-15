@@ -23,13 +23,34 @@ class EventsService {
 
   Future<List<Event>> getUserEvents(String phone, String sortBy) async {
     final owner = await _ownerUserService.getOwner();
+
+    // Fetch events from Firebase
     final firebaseEvents =
         await _firebaseEventRepository.getEventsByPhone(phone);
+
+    // Fetch events from local database if the user is the owner
     List<Event> localEvents = [];
     if (owner.phone == phone) {
       localEvents = await _localDBEventRepository.getEventsByPhone(phone);
     }
-    return firebaseEvents + localEvents;
+
+    // Combine both Firebase and local events
+    final allEvents = firebaseEvents + localEvents;
+
+    // Sort the events based on the sortBy parameter
+    allEvents.sort((a, b) {
+      switch (sortBy) {
+        case "name":
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        case "date": // Sort by date
+        case "status": // Status is treated the same as date
+          return a.date.compareTo(b.date);
+        default:
+          throw ArgumentError("Invalid sortBy parameter: $sortBy");
+      }
+    });
+
+    return allEvents;
   }
 
   Future<void> editEvent(int eventId, String name, DateTime date) async {

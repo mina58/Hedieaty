@@ -9,7 +9,7 @@ class LocalDBEventRepository {
 
   Future<List<Event>> getEventsByPhone(String phone) async{
     await Future.delayed(Duration(milliseconds: 100));
-    return [Event(1, "local event", DateTime.parse("2001-01-01"), false)];
+    return [Event(1, "local event", DateTime.parse("2000-01-30"), false)];
   }
 
   Future<Event?> getEventById(int id) async {
