@@ -31,7 +31,7 @@ void main() async {
         ),
         ProxyProvider2<OwnerUserService, UserRepository, FriendsService>(
             update: (create, ownerUserService, userRepository, previous) {
-          return FriendsService(ownerUserService.getOwner(), userRepository);
+          return FriendsService(ownerUserService, userRepository);
         }),
         Provider<EventsService>(
           create: (_) => EventsService(),

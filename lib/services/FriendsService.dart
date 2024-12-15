@@ -5,50 +5,18 @@ import 'package:provider/provider.dart';
 import '../models/User.dart';
 
 class FriendsService {
-  FriendsService(this._ownerFuture, this._userRepository);
+  FriendsService(this._ownerUserService, this._userRepository);
 
-  final Future<User> _ownerFuture;
+  final OwnerUserService _ownerUserService;
   final UserRepository _userRepository;
-  var _allFriends = [
-    User(
-      "Alice Johnson",
-      "1234567890",
-      "https://avatar.iran.liara.run/public/default_avatar.png",
-      1,
-    ),
-    User(
-      "Bob Smith",
-      "2345678901",
-      "https://avatar.iran.liara.run/public/default_avatar.png",
-      2,
-    ),
-    User(
-      "Charlie Brown",
-      "3456789012",
-      "https://avatar.iran.liara.run/public/default_avatar.png",
-      3,
-    ),
-    User(
-      "Diana Prince",
-      "4567890123",
-      "https://avatar.iran.liara.run/public/default_avatar.png",
-      4,
-    ),
-    User(
-      "Evan Wright",
-      "5678901234",
-      "https://avatar.iran.liara.run/public/default_avatar.png",
-      5,
-    ),
-  ];
 
   Future<List<User>> getFriends() async {
-    final owner = await _ownerFuture;
+    final owner = await _ownerUserService.getOwner();
     return await _userRepository.getUserFriends(owner.phone);
   }
 
   Future<void> addFriend(String name, String phone) async {
-    final owner = await _ownerFuture;
+    final owner = await _ownerUserService.getOwner();
     final friend = await _userRepository.getUserByPhone(phone);
 
     if (friend == null) {
@@ -59,11 +27,11 @@ class FriendsService {
   }
 
   Future<List<User>> searchFriends(String query) async {
-    _allFriends = await getFriends();
+    List<User> allFriends = await getFriends();
     if (query.isEmpty) {
-      return List<User>.from(_allFriends);
+      return List<User>.from(allFriends);
     }
-    return _allFriends
+    return allFriends
         .where(
             (friend) => friend.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
