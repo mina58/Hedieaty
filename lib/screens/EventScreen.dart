@@ -28,13 +28,12 @@ class _EventScreenState extends State<EventScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final EventScreenArguments arguments =
-    ModalRoute.of(context)!.settings.arguments as EventScreenArguments;
+        ModalRoute.of(context)!.settings.arguments as EventScreenArguments;
     final GiftsService giftsService = Provider.of<GiftsService>(context);
     final bool isOwnerEvent = arguments.isOwnerEvent;
     final Event event = arguments.event;
     final String username = arguments.username;
-    Future<List<Gift>> _gifts =
-    giftsService.getEventGifts(event.id, _sortBy);
+    Future<List<Gift>> _gifts = giftsService.getEventGifts(event.id, _sortBy);
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
@@ -106,7 +105,8 @@ class EventScreenHeader extends StatelessWidget {
         if (isOwnerEvent)
           Row(
             children: [
-              EditButton(onPressed: () => _showEditEventForm(context, event)),
+              if (!event.isPublished)
+                EditButton(onPressed: () => _showEditEventForm(context, event)),
               IconButton(
                 icon: Icon(Icons.add),
                 tooltip: "Add Gift",
@@ -180,7 +180,7 @@ class EventScreenHeader extends StatelessWidget {
                 if (_formKey.currentState?.validate() == true) {
                   try {
                     final eventService =
-                    Provider.of<EventsService>(context, listen: false);
+                        Provider.of<EventsService>(context, listen: false);
                     await eventService.editEvent(
                       event.id,
                       _nameController.text.trim(),
@@ -308,14 +308,15 @@ class EventScreenHeader extends StatelessWidget {
                 if (_formKey.currentState?.validate() == true &&
                     _selectedImage != null) {
                   final giftsService =
-                  Provider.of<GiftsService>(context, listen: false);
+                      Provider.of<GiftsService>(context, listen: false);
                   await giftsService.addGift(
                     eventId: eventId,
                     name: _nameController.text.trim(),
                     price: int.parse(_priceController.text.trim()),
                     description: _descriptionController.text.trim(),
                     category: _categoryController.text.trim(),
-                    imageUrl: _selectedImage!.path, // Use file path as image URL
+                    imageUrl:
+                        _selectedImage!.path, // Use file path as image URL
                   );
                   Navigator.of(context).pop();
                   onAddGiftPressed();

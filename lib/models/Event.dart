@@ -25,4 +25,18 @@ class Event {
       map['isPublished'] as bool,
     );
   }
+
+  Event copyWith({
+    int? id,
+    String? name,
+    DateTime? date,
+    bool? isPublished,
+  }) {
+    return Event(
+      id ?? this.id,
+      name ?? this.name,
+      date ?? this.date,
+      isPublished ?? this.isPublished,
+    );
+  }
 }

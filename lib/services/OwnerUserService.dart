@@ -18,7 +18,6 @@ class OwnerUserService {
     );
   }
 
-  // Update the username in Firestore and Firebase Auth
   Future<void> updateUserName(String newName) async {
     final authUser = firebase_auth.FirebaseAuth.instance.currentUser!;
     final uid = authUser.uid;
@@ -29,7 +28,6 @@ class OwnerUserService {
         "username": newName,
       });
 
-      // Optionally, update the display name in Firebase Auth
       await authUser.updateDisplayName(newName);
 
       print("Username updated successfully.");
@@ -39,7 +37,6 @@ class OwnerUserService {
     }
   }
 
-  // Update the profile picture in Firebase Auth and Firestore
   Future<void> updateProfilePicture(XFile pickedFile) async {
     await Future.delayed(Duration(milliseconds: 10));
   }

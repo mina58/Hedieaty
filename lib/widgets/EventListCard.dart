@@ -76,15 +76,6 @@ class _EventListCardState extends State<EventListCard> {
                 "${widget.event.date.day}/${widget.event.date.month}/${widget.event.date.year}",
                 style: theme.textTheme.bodyLarge,
               ),
-              if (widget.event.isPublished)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Chip(
-                    label: Text("Published",
-                        style: TextStyle(color: theme.colorScheme.onSecondary)),
-                    backgroundColor: theme.colorScheme.secondary,
-                  ),
-                ),
             ],
           ),
           if (widget.isOwnerEventCard && !_isPublished)
