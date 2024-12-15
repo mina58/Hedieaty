@@ -15,22 +15,29 @@ class _SignupScreenState extends State<SignupScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   void _register() async {
     if (_formKey.currentState!.validate()) {
       final phone = _phoneController.text.trim();
+      final username = _usernameController.text.trim();
+
       try {
         // Create a Firebase user with email and password
-        await _auth.createUserWithEmailAndPassword(
+        final userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        // Save user data in Firestore with the phone number as the document ID
-        await _firestore.collection('users').doc(phone).set({
+        // Get the UID of the created user
+        final uid = userCredential.user!.uid;
+
+        // Save user data in Firestore with the UID as the document ID
+        await _firestore.collection('users').doc(uid).set({
           'email': _emailController.text.trim(),
           'phone': phone,
+          'username': username, // Add the username field
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -48,7 +55,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(displayProfile: false, showLogoutButton: false,),
+      appBar: MyAppBar(displayProfile: false, showLogoutButton: false),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Form(
@@ -56,6 +63,12 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TextFormField(
+                controller: _usernameController,
+                decoration: InputDecoration(labelText: 'Username'),
+                validator: (value) =>
+                value!.isEmpty ? 'Please enter a username' : null,
+              ),
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -67,8 +80,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
-                validator: (value) =>
-                value!.length < 6 ? 'Password must be at least 6 characters' : null,
+                validator: (value) => value!.length < 6
+                    ? 'Password must be at least 6 characters'
+                    : null,
               ),
               TextFormField(
                 controller: _phoneController,
