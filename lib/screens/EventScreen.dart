@@ -37,15 +37,24 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final EventScreenArguments arguments =
+          ModalRoute.of(context)!.settings.arguments as EventScreenArguments;
+      giftsService = Provider.of<GiftsService>(context, listen: false);
+      setState(() {
+        isOwnerEvent = arguments.isOwnerEvent;
+        event = arguments.event;
+        user = arguments.user;
+        _gifts = giftsService.getEventGifts(user, event, _sortBy);
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final EventScreenArguments arguments =
-        ModalRoute.of(context)!.settings.arguments as EventScreenArguments;
-    giftsService = Provider.of<GiftsService>(context);
-    isOwnerEvent = arguments.isOwnerEvent;
-    event = arguments.event;
-    user = arguments.user;
-    _loadGifts();
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
@@ -59,6 +68,11 @@ class _EventScreenState extends State<EventScreen> {
               username: user.name,
               event: event,
               onAddGiftPressed: _loadGifts,
+              onEditEvent: (newEvent) {
+                setState(() {
+                  event = newEvent;
+                });
+              },
             ),
             const SizedBox(height: 8),
             SortOptionsWidget(
@@ -93,6 +107,7 @@ class EventScreenHeader extends StatelessWidget {
     required this.username,
     required this.event,
     required this.onAddGiftPressed,
+    required this.onEditEvent,
   });
 
   final ThemeData theme;
@@ -100,6 +115,7 @@ class EventScreenHeader extends StatelessWidget {
   final String username;
   final Event event;
   final VoidCallback onAddGiftPressed;
+  final void Function(Event) onEditEvent;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +207,7 @@ class EventScreenHeader extends StatelessWidget {
                   try {
                     final eventService =
                         Provider.of<EventsService>(context, listen: false);
-                    await eventService.editEvent(
+                    final newEvent = await eventService.editEvent(
                       event.id,
                       _nameController.text.trim(),
                       _selectedDate,
@@ -200,6 +216,7 @@ class EventScreenHeader extends StatelessWidget {
                       SnackBar(content: Text('Event updated successfully')),
                     );
                     Navigator.of(context).pop();
+                    onEditEvent(newEvent);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

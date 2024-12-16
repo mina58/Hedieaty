@@ -31,7 +31,7 @@ class EventsService {
     // Fetch events from local database if the user is the owner
     List<Event> localEvents = [];
     if (owner.phone == phone) {
-      localEvents = await _localDBEventRepository.getEventsByPhone(phone);
+      localEvents = await _localDBEventRepository.getEventsByUserId(owner.id);
     }
 
     // Combine both Firebase and local events
@@ -53,7 +53,7 @@ class EventsService {
     return allEvents;
   }
 
-  Future<void> editEvent(int eventId, String name, DateTime date) async {
+  Future<Event> editEvent(int eventId, String name, DateTime date) async {
     // Check if the event exists in the local database
     final localEvent = await _localDBEventRepository.getEventById(eventId);
 
@@ -68,7 +68,7 @@ class EventsService {
     );
 
     // Save the updated event back to the local database
-    await _localDBEventRepository.updateEvent(updatedEvent);
+    return await _localDBEventRepository.updateEvent(updatedEvent);
   }
 
   Future<void> publishEvent(int eventId) async {
