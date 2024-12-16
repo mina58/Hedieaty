@@ -34,7 +34,7 @@ class DatabaseHelper {
         // Create the table here
         await db.execute('''
         CREATE TABLE IF NOT EXISTS users(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT PRIMARY,
           name TEXT NOT NULL,
           phone TEXT NOT NULL,
           imageURL TEXT NOT NULL
@@ -44,7 +44,7 @@ class DatabaseHelper {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
           date DATE NOT NULL,
-          owner_id INTEGER NOT NULL,
+          owner_id TEXT NOT NULL,
           FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
         );
   
@@ -60,8 +60,8 @@ class DatabaseHelper {
         );
         
         CREATE TABLE IF NOT EXISTS friends (
-          user_id INTEGER,
-          friend_id INTEGER,
+          user_id TEXT,
+          friend_id TEXT,
           PRIMARY KEY (user_id, friend_id),
           FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
           FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
