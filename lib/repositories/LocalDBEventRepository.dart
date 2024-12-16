@@ -95,4 +95,16 @@ class LocalDBEventRepository {
     );
     return await getEventById(id) ?? event;
   }
+
+  Future<bool> deleteEvent(Event event) async {
+    final db = await DatabaseHelper.instance.database;
+
+    final result = await db.delete(
+      'events',
+      where: 'id = ?',
+      whereArgs: [event.id],
+    );
+
+    return result > 0;
+  }
 }
