@@ -11,6 +11,7 @@ class OwnerUserService {
         .doc(authUser.uid)
         .get();
     return User(
+      authUser.uid,
       storedUser["username"],
       storedUser["phone"],
       authUser.photoURL ?? "https://avatar.iran.liara.run/public/",
