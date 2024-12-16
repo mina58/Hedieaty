@@ -28,4 +28,20 @@ class User {
       map['upcomingEvents'] as int,
     );
   }
+
+  User copyWith({
+    String? id,
+    String? name,
+    String? phone,
+    String? imageUrl,
+    int? upcomingEvents,
+  }) {
+    return User(
+      id ?? this.id,  // Use the provided value or keep the current value
+      name ?? this.name,
+      phone ?? this.phone,
+      imageUrl ?? this.imageUrl,
+      upcomingEvents ?? this.upcomingEvents,
+    );
+  }
 }

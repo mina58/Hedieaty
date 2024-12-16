@@ -39,12 +39,22 @@ class UserRepository {
     ),
   ];
 
+  Future<User?> getUserById(String userId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return User(
+        userId, "John dow", "234", "https://avatar.iran.liara.run/public/", 23);
+  }
+
+  Future<void> addUser(User user) async{
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
   Future<List<User>> getUserFriends(String phone) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return allFriends;
   }
 
-  Future<User?> getUserByPhone(String phone) async{
+  Future<User?> getUserByPhone(String phone) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return User(
       "1",
@@ -55,7 +65,7 @@ class UserRepository {
     );
   }
 
-  Future<void> addFriend(User owner, User friend) async{
+  Future<void> addFriend(User owner, User friend) async {
     await Future.delayed(const Duration(milliseconds: 500));
   }
 }

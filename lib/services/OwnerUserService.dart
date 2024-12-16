@@ -31,9 +31,7 @@ class OwnerUserService {
 
       await authUser.updateDisplayName(newName);
 
-      print("Username updated successfully.");
     } catch (e) {
-      print("Error updating username: $e");
       throw Exception("Failed to update username.");
     }
   }

@@ -17,6 +17,11 @@ class FriendsService {
 
   Future<void> addFriend(String name, String phone) async {
     final owner = await _ownerUserService.getOwner();
+    final checkOwner = await _userRepository.getUserById(owner.id);
+    if (checkOwner == null) {
+      _userRepository.addUser(owner);
+    }
+
     final friend = await _userRepository.getUserByPhone(phone);
 
     if (friend == null) {
