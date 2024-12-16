@@ -12,23 +12,22 @@ class FriendsService {
 
   Future<List<User>> getFriends() async {
     final owner = await _ownerUserService.getOwner();
-    return await _userRepository.getUserFriends(owner.phone);
+    return await _userRepository.getUserFriends(owner.id);
   }
 
   Future<void> addFriend(String name, String phone) async {
     final owner = await _ownerUserService.getOwner();
-    final checkOwner = await _userRepository.getUserById(owner.id);
-    if (checkOwner == null) {
-      _userRepository.addUser(owner);
+    if (await _userRepository.isUserSavedLocally(owner.id)) {
+      _userRepository.addUserLocally(owner);
     }
 
-    final friend = await _userRepository.getUserByPhone(phone);
+    final friend = await _userRepository.getUserByPhoneFromFirebase(phone);
 
     if (friend == null) {
       throw Exception("User not found");
     }
 
-    await _userRepository.addFriend(owner, friend);
+    await _userRepository.addFriendLocally(owner, friend);
   }
 
   Future<List<User>> searchFriends(String query) async {

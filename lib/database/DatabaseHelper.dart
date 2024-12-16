@@ -31,15 +31,17 @@ class DatabaseHelper {
       path,
       version: 1,
       onCreate: (db, version) async {
-        // Create the table here
+        // Create the tables here
         await db.execute('''
         CREATE TABLE IF NOT EXISTS users(
-          id TEXT PRIMARY,
+          id TEXT PRIMARY KEY,
           name TEXT NOT NULL,
           phone TEXT NOT NULL,
           imageURL TEXT NOT NULL
         );
-  
+      ''');
+
+        await db.execute('''
         CREATE TABLE IF NOT EXISTS events(
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
@@ -47,7 +49,9 @@ class DatabaseHelper {
           owner_id TEXT NOT NULL,
           FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
         );
-  
+      ''');
+
+        await db.execute('''
         CREATE TABLE IF NOT EXISTS gifts( 
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           name TEXT NOT NULL,
@@ -58,7 +62,9 @@ class DatabaseHelper {
           event_id INTEGER NOT NULL,
           FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
         );
-        
+      ''');
+
+        await db.execute('''
         CREATE TABLE IF NOT EXISTS friends (
           user_id TEXT,
           friend_id TEXT,
@@ -66,8 +72,9 @@ class DatabaseHelper {
           FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
           FOREIGN KEY (friend_id) REFERENCES users (id) ON DELETE CASCADE
         );
-        ''');
+      ''');
 
+        // Enable foreign key constraints
         await db.execute('PRAGMA foreign_keys = ON;');
       },
     );
