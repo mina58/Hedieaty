@@ -26,7 +26,7 @@ class EventsService {
 
     // Fetch events from Firebase
     final firebaseEvents =
-        await _firebaseEventRepository.getEventsById(id);
+        await _firebaseEventRepository.getEventsByUserId(id);
 
     // Fetch events from local database if the user is the owner
     List<Event> localEvents = [];
