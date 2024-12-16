@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/database/DatabaseHelper.dart';
 import 'package:hedieaty/repositories/FirebaseEventRepository.dart';
 import 'package:hedieaty/repositories/FirebaseGiftRepository.dart';
 import 'package:hedieaty/repositories/LocalDBGiftRepository.dart';
