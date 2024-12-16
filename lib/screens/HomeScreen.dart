@@ -77,8 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     "/event_list",
                     arguments: EventListScreenArguments(
                       false,
-                      friend.name,
-                      friend.phone,
+                      friend,
                     ),
                   );
                 },

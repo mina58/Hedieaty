@@ -116,8 +116,7 @@ class OwnerProfileContent extends StatelessWidget {
                           "/event_list",
                           arguments: EventListScreenArguments(
                             true,
-                            user.name,
-                            user.phone,
+                            user,
                           ),
                         );
                       },

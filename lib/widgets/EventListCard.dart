@@ -5,6 +5,7 @@ import 'package:hedieaty/services/EventsService.dart';
 import 'package:hedieaty/widgets/MyCard.dart';
 import 'package:provider/provider.dart';
 
+import '../models/User.dart';
 import 'PublishButton.dart';
 
 class EventListCard extends StatefulWidget {
@@ -12,13 +13,13 @@ class EventListCard extends StatefulWidget {
     Key? key,
     required this.isOwnerEventCard,
     required this.event,
-    required this.username,
+    required this.user,
     required this.onPublish
   }) : super(key: key);
 
   final bool isOwnerEventCard;
   final Event event;
-  final String username;
+  final User user;
   final void Function() onPublish;
 
   @override
@@ -97,7 +98,7 @@ class _EventListCardState extends State<EventListCard> {
           arguments: EventScreenArguments(
             widget.event,
             widget.isOwnerEventCard,
-            widget.username,
+            widget.user,
           ),
         );
       },

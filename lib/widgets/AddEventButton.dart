@@ -95,7 +95,7 @@ class AddEventButton extends StatelessWidget {
                     Navigator.of(context).pop();
                     Navigator.pushNamed(context, "/event",
                         arguments:
-                            EventScreenArguments(event, true, owner.name));
+                            EventScreenArguments(event, true, owner));
                   } catch (e) {
                     // Show error message if event creation fails
                     ScaffoldMessenger.of(context).showSnackBar(

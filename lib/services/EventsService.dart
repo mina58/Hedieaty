@@ -18,7 +18,7 @@ class EventsService {
   Future<Event> addEvent(String name, DateTime date) async {
     final owner = await _ownerUserService.getOwner();
     return await _localDBEventRepository.addEventForUser(
-        owner, Event(0, name, date, false));
+        Event(0, name, date, false, owner));
   }
 
   Future<List<Event>> getUserEvents(String phone, String sortBy) async {

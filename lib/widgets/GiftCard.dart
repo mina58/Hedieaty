@@ -13,10 +13,14 @@ class GiftCard extends StatefulWidget {
     super.key,
     required this.isOwnerGiftCard,
     required this.gift,
+    required this.onPledge,
+    required this.onEdit,
   });
 
   final bool isOwnerGiftCard;
-  Gift gift;
+  final Gift gift;
+  final void Function() onPledge;
+  final void Function() onEdit;
 
   @override
   State<GiftCard> createState() => _GiftCardState();
@@ -121,7 +125,7 @@ class _GiftCardState extends State<GiftCard> {
               child: Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () async{
                 if (_formKey.currentState?.validate() == true) {
                   final giftsService =
                       Provider.of<GiftsService>(context, listen: false);
@@ -131,9 +135,10 @@ class _GiftCardState extends State<GiftCard> {
                     price: int.parse(_priceController.text.trim()),
                     description: _descriptionController.text.trim(),
                     category: _categoryController.text.trim(),
+                    gift: widget.gift,
                   );
-                  Navigator.of(context).pop();
-                  _showSnackBar('Gift updated successfully');
+                  Navigator.pop(context);
+                  widget.onEdit();
                 }
               },
               child: Text('Save Changes'),
@@ -151,13 +156,8 @@ class _GiftCardState extends State<GiftCard> {
     }
 
     final giftsService = Provider.of<GiftsService>(context, listen: false);
-    if (await giftsService.pledgeGift(widget.gift.id)) {
-      final owner = await Provider.of<OwnerUserService>(context, listen: false)
-          .getOwner();
-      setState(() {
-        _isPledged = true;
-        widget.gift = widget.gift.copyWith(pledgedBy: owner);
-      });
+    if (await giftsService.pledgeGift(widget.gift)) {
+      widget.onPledge();
     } else {
       _showSnackBar("Failed to pledge gift");
     }
@@ -173,18 +173,21 @@ class _GiftCardState extends State<GiftCard> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.gift.name,
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  Text(
-                    widget.gift.category,
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ],
+              SizedBox(
+                width: 150,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.gift.name,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    Text(
+                      widget.gift.category,
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
               ),
               Column(
                 children: [

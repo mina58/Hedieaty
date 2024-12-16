@@ -7,6 +7,7 @@ import 'package:hedieaty/widgets/SortByOption.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Event.dart';
+import '../models/User.dart';
 import '../widgets/AddEventButton.dart';
 import '../widgets/EventListCard.dart';
 import '../widgets/SortOptions.dart';
@@ -19,9 +20,8 @@ class EventListScreen extends StatefulWidget {
 class _EventListScreenState extends State<EventListScreen> {
   String _sortBy = "name";
   late Future<List<Event>> userEvents;
-  late String userPhone;
+  late User user;
   late EventsService eventsService;
-  late String username;
   late bool isOwnerEventList;
 
   void _onPublish() {
@@ -31,7 +31,7 @@ class _EventListScreenState extends State<EventListScreen> {
   }
 
   void _loadEvents() {
-    userEvents = eventsService.getUserEvents(userPhone, _sortBy);
+    userEvents = eventsService.getUserEvents(user.phone, _sortBy);
   }
 
   @override
@@ -41,8 +41,7 @@ class _EventListScreenState extends State<EventListScreen> {
     final EventListScreenArguments arguments =
         ModalRoute.of(context)!.settings.arguments as EventListScreenArguments;
     isOwnerEventList = arguments.isOwnerEventList;
-    username = arguments.username;
-    userPhone = arguments.userPhone;
+    user = arguments.user;
     _loadEvents();
 
     return Scaffold(
@@ -57,7 +56,7 @@ class _EventListScreenState extends State<EventListScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${username}'s Events",
+                    "${user.name}'s Events",
                     style: TextStyle(
                         fontSize: theme.textTheme.titleLarge!.fontSize),
                   ),
@@ -96,7 +95,7 @@ class _EventListScreenState extends State<EventListScreen> {
                 builder: (event) => EventListCard(
                   isOwnerEventCard: isOwnerEventList,
                   event: event,
-                  username: username,
+                  user: user,
                   onPublish: _onPublish,
                 ),
               ),

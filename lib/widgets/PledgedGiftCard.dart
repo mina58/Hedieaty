@@ -16,23 +16,28 @@ class PledgedGiftCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                gift.name,
-                style:
-                    TextStyle(fontSize: theme.textTheme.titleLarge!.fontSize),
-              ),
-              Text(
-                "\$${gift.price.toString()}",
-                style:
-                    TextStyle(fontSize: theme.textTheme.titleMedium!.fontSize),
-              ),
-            ],
+          SizedBox(
+            width: 150,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  gift.name,
+                  style: TextStyle(
+                      fontSize: theme.textTheme.titleMedium!.fontSize),
+                ),
+                Text(
+                  "\$${gift.price.toString()}",
+                  style: TextStyle(
+                      fontSize: theme.textTheme.titleMedium!.fontSize),
+                ),
+              ],
+            ),
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 gift.event.name,
@@ -49,7 +54,8 @@ class PledgedGiftCard extends StatelessWidget {
         ],
       ),
       onTap: () {
-        Navigator.pushNamed(context, "/gift_details", arguments: GiftDetailsScreenArguments(gift));
+        Navigator.pushNamed(context, "/gift_details",
+            arguments: GiftDetailsScreenArguments(gift));
       },
     );
   }

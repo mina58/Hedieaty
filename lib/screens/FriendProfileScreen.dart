@@ -55,8 +55,7 @@ class FriendProfileScreen extends StatelessWidget {
                             "/event_list",
                             arguments: EventListScreenArguments(
                               false,
-                              friend.name,
-                              friend.phone,
+                              friend,
                             ),
                           );
                         },

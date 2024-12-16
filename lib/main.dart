@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/repositories/FirebaseEventRepository.dart';
+import 'package:hedieaty/repositories/FirebaseGiftRepository.dart';
+import 'package:hedieaty/repositories/LocalDBGiftRepository.dart';
 import 'package:hedieaty/repositories/LocalDBEventRepository.dart';
 import 'package:hedieaty/repositories/UserRepository.dart';
 import 'package:hedieaty/screens/EventListScreen.dart';
@@ -26,6 +28,12 @@ void main() async {
     MultiProvider(
       providers: [
         Provider(
+          create: (_) => FirebaseGiftRepository(),
+        ),
+        Provider(
+          create: (_) => LocalDBGiftRepository(),
+        ),
+        Provider(
           create: (_) => FirebaseEventRepository(),
         ),
         Provider(
@@ -48,8 +56,12 @@ void main() async {
               EventsService(ownerUserService, localDBEventRepository,
                   firebaseEventRepository),
         ),
-        Provider<GiftsService>(
-          create: (_) => GiftsService(),
+        ProxyProvider3<OwnerUserService, LocalDBGiftRepository,
+            FirebaseGiftRepository, GiftsService>(
+          update: (create, ownerUserService, localDBGiftRepository,
+                  firebaseGiftRepository, previous) =>
+              GiftsService(ownerUserService, localDBGiftRepository,
+                  firebaseGiftRepository),
         ),
         Provider<ThemeData>(
           create: (_) => ThemeData(

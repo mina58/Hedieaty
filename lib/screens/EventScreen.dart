@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../models/Event.dart';
 import '../models/Gift.dart';
+import '../models/User.dart';
 import '../services/EventsService.dart';
 import '../widgets/SortByOption.dart';
 
@@ -23,17 +24,28 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   String _sortBy = "name";
+  late Future<List<Gift>> _gifts;
+  late bool isOwnerEvent;
+  late Event event;
+  late User user;
+  late GiftsService giftsService;
+
+  void _loadGifts() {
+    setState(() {
+      _gifts = giftsService.getEventGifts(user, event, _sortBy);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final EventScreenArguments arguments =
         ModalRoute.of(context)!.settings.arguments as EventScreenArguments;
-    final GiftsService giftsService = Provider.of<GiftsService>(context);
-    final bool isOwnerEvent = arguments.isOwnerEvent;
-    final Event event = arguments.event;
-    final String username = arguments.username;
-    Future<List<Gift>> _gifts = giftsService.getEventGifts(event.id, _sortBy);
+    giftsService = Provider.of<GiftsService>(context);
+    isOwnerEvent = arguments.isOwnerEvent;
+    event = arguments.event;
+    user = arguments.user;
+    _loadGifts();
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
@@ -44,13 +56,9 @@ class _EventScreenState extends State<EventScreen> {
             EventScreenHeader(
               theme: theme,
               isOwnerEvent: isOwnerEvent,
-              username: username,
+              username: user.name,
               event: event,
-              onAddGiftPressed: () {
-                setState(() {
-                  _gifts = giftsService.getEventGifts(event.id, _sortBy);
-                });
-              },
+              onAddGiftPressed: _loadGifts,
             ),
             const SizedBox(height: 8),
             SortOptionsWidget(
@@ -58,7 +66,7 @@ class _EventScreenState extends State<EventScreen> {
               onSortChange: (sortBy) {
                 setState(() {
                   _sortBy = sortBy;
-                  _gifts = giftsService.getEventGifts(event.id, _sortBy);
+                  _loadGifts();
                 });
               },
             ),
@@ -66,6 +74,8 @@ class _EventScreenState extends State<EventScreen> {
               child: GiftsList(
                 giftsFuture: _gifts,
                 isOwnerEvent: isOwnerEvent,
+                onPledge: _loadGifts,
+                onEdit: _loadGifts,
               ),
             ),
           ],
@@ -310,7 +320,7 @@ class EventScreenHeader extends StatelessWidget {
                   final giftsService =
                       Provider.of<GiftsService>(context, listen: false);
                   await giftsService.addGift(
-                    eventId: eventId,
+                    event: event,
                     name: _nameController.text.trim(),
                     price: int.parse(_priceController.text.trim()),
                     description: _descriptionController.text.trim(),
@@ -407,10 +417,14 @@ class GiftsList extends StatelessWidget {
     super.key,
     required this.giftsFuture,
     required this.isOwnerEvent,
+    required this.onPledge,
+    required this.onEdit,
   });
 
   final Future<List<Gift>> giftsFuture;
   final bool isOwnerEvent;
+  final void Function() onPledge;
+  final void Function() onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -419,6 +433,8 @@ class GiftsList extends StatelessWidget {
       builder: (gift) => GiftCard(
         isOwnerGiftCard: isOwnerEvent,
         gift: gift,
+        onPledge: onPledge,
+        onEdit: onEdit,
       ),
     );
   }

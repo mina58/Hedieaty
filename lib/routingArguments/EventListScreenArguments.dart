@@ -1,7 +1,8 @@
+import '../models/User.dart';
+
 class EventListScreenArguments {
-  EventListScreenArguments(this.isOwnerEventList, this.username, this.userPhone);
+  EventListScreenArguments(this.isOwnerEventList, this.user);
 
   final bool isOwnerEventList;
-  final String username;
-  final String userPhone;
+  final User user;
 }
