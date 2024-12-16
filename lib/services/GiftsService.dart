@@ -66,12 +66,41 @@ class GiftsService {
 
   Future<List<Gift>> getEventGifts(
       User eventOwner, Event event, String sortBy) async {
+    List<Gift> gifts;
+
     if (event.isPublished) {
-      return await _firebaseGiftRepository.getGiftsByUserAndEvent(
+      gifts = await _firebaseGiftRepository.getGiftsByUserAndEvent(
           eventOwner, event);
     } else {
-      return await _localDBGiftRepository.getGiftsByEvent(event);
+      gifts = await _localDBGiftRepository.getGiftsByEvent(event);
     }
+
+    // Sorting the list based on the sortBy parameter
+    switch (sortBy) {
+      case 'name':
+        gifts.sort(
+            (a, b) => a.name.compareTo(b.name)); // Sort alphabetically by name
+        break;
+      case 'date':
+        // Sort by event date, assuming `event.date` is what you want
+        gifts.sort((a, b) => a.event.date.compareTo(b.event.date));
+        break;
+      case 'status':
+        // Sort by pledge status (isPledged: false -> true)
+        gifts.sort((a, b) {
+          return a.isPledged == b.isPledged
+              ? 0
+              : a.isPledged
+                  ? 1 // Pledged items come after available ones
+                  : -1; // Available items come first
+        });
+        break;
+      default:
+        // Default case: no sorting
+        break;
+    }
+
+    return gifts;
   }
 
   Future<void> addGift({
