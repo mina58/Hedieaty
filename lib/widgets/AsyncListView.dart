@@ -26,7 +26,7 @@ class AsyncListView extends StatelessWidget {
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
               return Center(
-                child: Text(errorMessage),
+                child: Text(snapshot.error.toString()),
               );
             } else if (snapshot.hasData) {
               return ListView(

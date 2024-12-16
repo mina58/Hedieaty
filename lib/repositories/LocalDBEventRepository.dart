@@ -16,7 +16,7 @@ class LocalDBEventRepository {
       "date": event.date.toIso8601String(),
       "owner_id": event.owner.id,
     });
-    return event.copyWith(id: eventId);
+    return event.copyWith(id: eventId.toString());
   }
 
   Future<List<Event>> getEventsByUserId(String id) async {
@@ -38,7 +38,7 @@ class LocalDBEventRepository {
     for (final map in result) {
       events.add(
         Event(
-          map["id"] as int,
+          map["id"].toString(),
           map["name"] as String,
           DateTime.parse(map["date"] as String),
           false,
@@ -49,7 +49,7 @@ class LocalDBEventRepository {
     return events;
   }
 
-  Future<Event?> getEventById(int id) async {
+  Future<Event?> getEventById(String id) async {
     final db = await DatabaseHelper.instance.database;
 
     final result = await db.query(
@@ -73,7 +73,7 @@ class LocalDBEventRepository {
 
     // Create and return the Event object
     return Event(
-      eventMap['id'] as int,
+      eventMap['id'].toString(),
       eventMap['name'] as String,
       DateTime.parse(eventMap['date'] as String),
       false,
@@ -93,7 +93,7 @@ class LocalDBEventRepository {
       where: 'id = ?',
       whereArgs: [event.id],
     );
-    return await getEventById(id) ?? event;
+    return await getEventById(id.toString()) ?? event;
   }
 
   Future<bool> deleteEvent(Event event) async {

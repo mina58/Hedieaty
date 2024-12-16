@@ -220,7 +220,7 @@ class EventScreenHeader extends StatelessWidget {
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Failed to update event: $e'),
+                        content: Text('Failed to update event: $e.'),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -235,7 +235,7 @@ class EventScreenHeader extends StatelessWidget {
     );
   }
 
-  void _showAddGiftForm(BuildContext context, int eventId) {
+  void _showAddGiftForm(BuildContext context, String eventId) {
     final _formKey = GlobalKey<FormState>();
     final _nameController = TextEditingController();
     final _priceController = TextEditingController();

@@ -31,7 +31,7 @@ class _EventListScreenState extends State<EventListScreen> {
   }
 
   void _loadEvents() {
-    userEvents = eventsService.getUserEvents(user.phone, _sortBy);
+    userEvents = eventsService.getUserEvents(user.id, _sortBy);
   }
 
   @override

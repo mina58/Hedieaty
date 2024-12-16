@@ -3,7 +3,7 @@ import 'package:hedieaty/models/User.dart';
 class Event {
   Event(this.id, this.name, this.date, this.isPublished, this.owner);
 
-  final int id;
+  final String id;
   final String name;
   final DateTime date;
   final bool isPublished;
@@ -23,7 +23,7 @@ class Event {
   // Create an Event object from a Map
   factory Event.fromMap(Map<String, dynamic> map) {
     return Event(
-      map['id'] as int,
+      map['id'] as String,
       map['name'] as String,
       DateTime.parse(map['date'] as String),
       map['isPublished'] as bool,
@@ -32,7 +32,7 @@ class Event {
   }
 
   Event copyWith({
-    int? id,
+    String? id,
     String? name,
     DateTime? date,
     bool? isPublished,

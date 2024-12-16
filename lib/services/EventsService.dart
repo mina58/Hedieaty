@@ -18,19 +18,19 @@ class EventsService {
   Future<Event> addEvent(String name, DateTime date) async {
     final owner = await _ownerUserService.getOwner();
     return await _localDBEventRepository.addEventForUser(
-        Event(0, name, date, false, owner));
+        Event("0", name, date, false, owner));
   }
 
-  Future<List<Event>> getUserEvents(String phone, String sortBy) async {
+  Future<List<Event>> getUserEvents(String id, String sortBy) async {
     final owner = await _ownerUserService.getOwner();
 
     // Fetch events from Firebase
     final firebaseEvents =
-        await _firebaseEventRepository.getEventsByPhone(phone);
+        await _firebaseEventRepository.getEventsById(id);
 
     // Fetch events from local database if the user is the owner
     List<Event> localEvents = [];
-    if (owner.phone == phone) {
+    if (owner.id == id) {
       localEvents = await _localDBEventRepository.getEventsByUserId(owner.id);
     }
 
@@ -53,7 +53,7 @@ class EventsService {
     return allEvents;
   }
 
-  Future<Event> editEvent(int eventId, String name, DateTime date) async {
+  Future<Event> editEvent(String eventId, String name, DateTime date) async {
     // Check if the event exists in the local database
     final localEvent = await _localDBEventRepository.getEventById(eventId);
 
@@ -71,7 +71,9 @@ class EventsService {
     return await _localDBEventRepository.updateEvent(updatedEvent);
   }
 
-  Future<void> publishEvent(int eventId) async {
-    await Future.delayed(const Duration(milliseconds: 500));
+  Future<Event> publishEvent(String eventId) async {
+    final localEvent = await _localDBEventRepository.getEventById(eventId);
+    await _localDBEventRepository.deleteEvent(localEvent!);
+    return await _firebaseEventRepository.addEvent(localEvent);
   }
 }
