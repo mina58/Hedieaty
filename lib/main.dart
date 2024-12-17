@@ -34,8 +34,9 @@ void main() async {
         Provider(
           create: (_) => UserRepository(),
         ),
-        Provider(
-          create: (_) => LocalDBGiftRepository(),
+        ProxyProvider<LocalDBEventRepository, LocalDBGiftRepository>(
+          update: (create, localDBEventRepository, previous) =>
+              LocalDBGiftRepository(localDBEventRepository),
         ),
         // Use ProxyProvider to inject UserRepository into EventRepositories
         ProxyProvider<UserRepository, FirebaseEventRepository>(

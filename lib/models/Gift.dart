@@ -5,7 +5,7 @@ class Gift {
   Gift(this.id, this.name, this.price, this.description, this.event,
       this.canPledge, this.pledgedBy, this.category, this.imageURL);
 
-  final int id;
+  final String id;
   final String name;
   final int price;
   final String description;
@@ -35,7 +35,7 @@ class Gift {
   // Create a Gift object from a Map
   factory Gift.fromMap(Map<String, dynamic> map) {
     return Gift(
-      map['id'] as int,
+      map['id'].toString(),
       map['name'] as String,
       map['price'] as int,
       map['description'] as String,
@@ -51,7 +51,7 @@ class Gift {
   }
 
   Gift copyWith({
-    int? id,
+    String? id,
     String? name,
     int? price,
     String? description,

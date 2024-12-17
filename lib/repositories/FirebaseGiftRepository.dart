@@ -7,7 +7,7 @@ class FirebaseGiftRepository {
   // Dummy Gifts
   List<Gift> gifts = [
     Gift(
-      1,
+      "1",
       'Smartwatch',
       199,
       'A stylish smartwatch with fitness tracking features.',
@@ -18,7 +18,7 @@ class FirebaseGiftRepository {
       'https://example.com/smartwatch.jpg',
     ),
     Gift(
-      2,
+      "1",
       'Personalized Mug',
       15,
       'A mug with a custom message or photo.',
@@ -29,7 +29,7 @@ class FirebaseGiftRepository {
       'https://example.com/mug.jpg',
     ),
     Gift(
-      3,
+      "1",
       'Bluetooth Speaker',
       49,
       'Portable wireless Bluetooth speaker for music lovers.',
@@ -40,7 +40,7 @@ class FirebaseGiftRepository {
       'https://example.com/speaker.jpg',
     ),
     Gift(
-      4,
+      "1",
       'Wedding Photo Frame',
       25,
       'A beautiful photo frame for wedding memories.',
@@ -51,7 +51,7 @@ class FirebaseGiftRepository {
       'https://example.com/photo_frame.jpg',
     ),
     Gift(
-      5,
+      "1",
       'Cooking Class Voucher',
       100,
       'A voucher for an online cooking class.',

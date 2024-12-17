@@ -17,6 +17,8 @@ class GiftsService {
       User eventOwner, Event event, String sortBy) async {
     List<Gift> gifts;
 
+    User appOwner = await _ownerUserService.getOwner();
+
     if (event.isPublished) {
       gifts = await _firebaseGiftRepository.getGiftsByUserAndEvent(
           eventOwner, event);
@@ -60,19 +62,17 @@ class GiftsService {
     required String category,
     required String imageUrl,
   }) async {
-    _localDBGiftRepository.addGiftToEvent(
-        Gift(
-          0,
-          name,
-          price,
-          description,
-          event,
-          true,
-          null,
-          category,
-          imageUrl,
-        ),
-        event);
+    _localDBGiftRepository.addGiftToEvent(Gift(
+      "1",
+      name,
+      price,
+      description,
+      event,
+      true,
+      null,
+      category,
+      imageUrl,
+    ));
   }
 
   Future<bool> pledgeGift(Gift gift) async {
@@ -91,7 +91,7 @@ class GiftsService {
   }
 
   Future<void> updateGift({
-    required int giftId,
+    required String giftId,
     required String name,
     required int price,
     required String description,

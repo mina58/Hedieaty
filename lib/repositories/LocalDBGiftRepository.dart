@@ -1,77 +1,85 @@
+import 'package:hedieaty/database/DatabaseHelper.dart';
 import 'package:hedieaty/models/Event.dart';
+import 'package:hedieaty/repositories/FirebaseEventRepository.dart';
+import 'package:hedieaty/repositories/LocalDBEventRepository.dart';
 
 import '../models/Gift.dart';
-import '../models/User.dart';
 
 class LocalDBGiftRepository {
+  LocalDBGiftRepository(
+    this._localDBEventRepository,
+  );
+
+  final LocalDBEventRepository _localDBEventRepository;
+
   Future<List<Gift>> getGiftsByEvent(Event event) async {
-    List<Gift> gifts = [
-      Gift(
-        1,
-        'Smartwatch',
-        199,
-        'A stylish smartwatch with fitness tracking features.',
-        Event("1", 'Birthday Party', DateTime(2024, 12, 25), true, User("1", "sdaf", "dfsa", "dfsa", 234)),
-        true,
-        null,
-        'Electronics',
-        'https://example.com/smartwatch.jpg',
-      ),
-      Gift(
-        2,
-        'Personalized Mug',
-        15,
-        'A mug with a custom message or photo.',
-        Event("1", 'Birthday Party', DateTime(2024, 12, 25), true, User("1", "sdaf", "dfsa", "dfsa", 234)),
-        true,
-        null,  // No one pledged
-        'Home',
-        'https://example.com/mug.jpg',
-      ),
-      Gift(
-        3,
-        'Bluetooth Speaker',
-        49,
-        'Portable wireless Bluetooth speaker for music lovers.',
-        Event("1", 'Birthday Party', DateTime(2024, 12, 25), true, User("1", "sdaf", "dfsa", "dfsa", 234)),
-        true,
-        null,
-        'Electronics',
-        'https://example.com/speaker.jpg',
-      ),
-      Gift(
-        4,
-        'Wedding Photo Frame',
-        25,
-        'A beautiful photo frame for wedding memories.',
-        Event("1", 'Birthday Party', DateTime(2024, 12, 25), true, User("1", "sdaf", "dfsa", "dfsa", 234)),
-        false,
-        null,  // No one pledged
-        'Home',
-        'https://example.com/photo_frame.jpg',
-      ),
-      Gift(
-        5,
-        'Cooking Class Voucher',
-        100,
-        'A voucher for an online cooking class.',
-        Event("1", 'Birthday Party', DateTime(2024, 12, 25), true, User("1", "sdaf", "dfsa", "dfsa", 234)),
-        true,
-        null,
-        'Experience',
-        'https://example.com/cooking_class.jpg',
-      ),
-    ];
-    await Future.delayed(Duration(milliseconds: 100));
-    return gifts;
+    final db = await DatabaseHelper.instance.database;
+    try {
+      // Query the gifts table where the event_id matches the event's id
+      final List<Map<String, dynamic>> giftMaps = await db.query(
+        'gifts',
+        where: 'event_id = ?',
+        whereArgs: [event.id],
+      );
+
+      // Convert the query results into a list of Gift objects
+      List<Gift> gifts = giftMaps.map((giftMap) {
+        return Gift(
+          giftMap['id'].toString(),
+          giftMap['name'] as String,
+          giftMap['price'] as int,
+          giftMap['description'] as String,
+          event,
+          false,
+          null,
+          giftMap['category'] as String,
+          "https://hedieaty.s3.us-east-1.amazonaws.com/download.jpg"
+        );
+      }).toList();
+
+      return gifts;
+    } catch (e) {
+      // Handle any errors that occur during the query
+      throw Exception("Failed to retrieve gifts for event ${event.id}: $e");
+    }
   }
 
-  Future<void> addGiftToEvent(Gift gift, Event event) async{
-    await Future.delayed(Duration(milliseconds: 100));
+  Future<void> addGiftToEvent(Gift gift) async {
+    final db = await DatabaseHelper.instance.database;
+    try {
+      // Insert a new gift into the 'gifts' table
+      await db.insert('gifts', {
+        'name': gift.name,
+        'price': gift.price,
+        'description': gift.description,
+        'category': gift.category,
+        'image_url': gift.imageURL,
+        'event_id': gift.event.id,
+      });
+    } catch (e) {
+      throw Exception("Failed to add gift to event ${gift.event.id}: $e");
+    }
   }
 
-  Future<void> updateGift(Gift newGift) async{
-    await Future.delayed(Duration(milliseconds: 100));
+  Future<void> updateGift(Gift gift) async {
+    final db = await DatabaseHelper.instance.database;
+    try {
+      await db.update(
+        'gifts',
+        {
+          'name': gift.name,
+          'price': gift.price,
+          'description': gift.description,
+          'category': gift.category,
+          'image_url': gift.imageURL,
+          'event_id': gift.event.id,
+        },
+        where: 'id = ?',
+        whereArgs: [gift.id],
+      );
+    } catch (e) {
+      throw Exception("Failed to update gift with ID ${gift.id}: $e");
+    }
   }
-  
+
 }
