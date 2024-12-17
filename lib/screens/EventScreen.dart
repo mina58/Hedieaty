@@ -32,7 +32,7 @@ class _EventScreenState extends State<EventScreen> {
 
   void _loadGifts() {
     setState(() {
-      _gifts = giftsService.getEventGifts(user, event, _sortBy);
+      _gifts = giftsService.getEventGifts(event, _sortBy);
     });
   }
 
@@ -47,7 +47,7 @@ class _EventScreenState extends State<EventScreen> {
         isOwnerEvent = arguments.isOwnerEvent;
         event = arguments.event;
         user = arguments.user;
-        _gifts = giftsService.getEventGifts(user, event, _sortBy);
+        _gifts = giftsService.getEventGifts(event, _sortBy);
       });
     });
   }

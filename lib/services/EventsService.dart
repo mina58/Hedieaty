@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:hedieaty/models/Event.dart';
 import 'package:hedieaty/repositories/FirebaseEventRepository.dart';
+import 'package:hedieaty/repositories/FirebaseGiftRepository.dart';
 import 'package:hedieaty/repositories/LocalDBEventRepository.dart';
+import 'package:hedieaty/repositories/LocalDBGiftRepository.dart';
 import 'package:hedieaty/services/OwnerUserService.dart';
 
 class EventsService {
@@ -9,24 +11,27 @@ class EventsService {
     this._ownerUserService,
     this._localDBEventRepository,
     this._firebaseEventRepository,
+    this._localDBGiftRepository,
+    this._firebaseGiftRepository,
   );
 
   final OwnerUserService _ownerUserService;
   final LocalDBEventRepository _localDBEventRepository;
   final FirebaseEventRepository _firebaseEventRepository;
+  final LocalDBGiftRepository _localDBGiftRepository;
+  final FirebaseGiftRepository _firebaseGiftRepository;
 
   Future<Event> addEvent(String name, DateTime date) async {
     final owner = await _ownerUserService.getOwner();
-    return await _localDBEventRepository.addEventForUser(
-        Event("0", name, date, false, owner));
+    return await _localDBEventRepository
+        .addEventForUser(Event("0", name, date, false, owner));
   }
 
   Future<List<Event>> getUserEvents(String id, String sortBy) async {
     final owner = await _ownerUserService.getOwner();
 
     // Fetch events from Firebase
-    final firebaseEvents =
-        await _firebaseEventRepository.getEventsByUserId(id);
+    final firebaseEvents = await _firebaseEventRepository.getEventsByUserId(id);
 
     // Fetch events from local database if the user is the owner
     List<Event> localEvents = [];
@@ -73,7 +78,13 @@ class EventsService {
 
   Future<Event> publishEvent(String eventId) async {
     final localEvent = await _localDBEventRepository.getEventById(eventId);
+    final gifts = await _localDBGiftRepository.getGiftsByEvent(localEvent!);
+    final newEvent = await _firebaseEventRepository.addEvent(localEvent);
+    for (var gift in gifts) {
+      await _firebaseGiftRepository
+          .addGiftToEvent(gift.copyWith(event: newEvent));
+    }
     await _localDBEventRepository.deleteEvent(localEvent!);
-    return await _firebaseEventRepository.addEvent(localEvent);
+    return newEvent;
   }
 }

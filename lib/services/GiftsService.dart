@@ -13,15 +13,16 @@ class GiftsService {
   final LocalDBGiftRepository _localDBGiftRepository;
   final FirebaseGiftRepository _firebaseGiftRepository;
 
-  Future<List<Gift>> getEventGifts(
-      User eventOwner, Event event, String sortBy) async {
+  Future<List<Gift>> getEventGifts(Event event, String sortBy) async {
     List<Gift> gifts;
 
     User appOwner = await _ownerUserService.getOwner();
 
     if (event.isPublished) {
-      gifts = await _firebaseGiftRepository.getGiftsByUserAndEvent(
-          eventOwner, event);
+      gifts = await _firebaseGiftRepository.getGiftsByEvent(event);
+      if (appOwner.id == event.owner.id) {
+        gifts = gifts.map((gift) => gift.copyWith(canPledge: false)).toList();
+      }
     } else {
       gifts = await _localDBGiftRepository.getGiftsByEvent(event);
     }
@@ -62,17 +63,30 @@ class GiftsService {
     required String category,
     required String imageUrl,
   }) async {
-    _localDBGiftRepository.addGiftToEvent(Gift(
-      "1",
-      name,
-      price,
-      description,
-      event,
-      true,
-      null,
-      category,
-      imageUrl,
-    ));
+    if (!event.isPublished) {
+      _localDBGiftRepository.addGiftToEvent(Gift(
+        "1",
+        name,
+        price,
+        description,
+        event,
+        true,
+        null,
+        category,
+        imageUrl,
+      ));
+    } else {
+      _firebaseGiftRepository.addGiftToEvent(Gift(
+          "0",
+          name,
+          price,
+          description,
+          event,
+          false,
+          null,
+          category,
+          "https://hedieaty.s3.us-east-1.amazonaws.com/download.jpg"));
+    }
   }
 
   Future<bool> pledgeGift(Gift gift) async {

@@ -29,10 +29,16 @@ void main() async {
     MultiProvider(
       providers: [
         Provider(
-          create: (_) => FirebaseGiftRepository(),
-        ),
-        Provider(
           create: (_) => UserRepository(),
+        ),
+        ProxyProvider<UserRepository, LocalDBEventRepository>(
+          update: (context, userRepository, previous) {
+            return LocalDBEventRepository(userRepository);
+          },
+        ),
+        ProxyProvider<UserRepository, FirebaseGiftRepository>(
+          update: (create, userRepository, previous) =>
+              FirebaseGiftRepository(userRepository),
         ),
         ProxyProvider<LocalDBEventRepository, LocalDBGiftRepository>(
           update: (create, localDBEventRepository, previous) =>
@@ -44,11 +50,6 @@ void main() async {
             return FirebaseEventRepository(userRepository);
           },
         ),
-        ProxyProvider<UserRepository, LocalDBEventRepository>(
-          update: (context, userRepository, previous) {
-            return LocalDBEventRepository(userRepository);
-          },
-        ),
         Provider<OwnerUserService>(
           create: (_) => OwnerUserService(),
         ),
@@ -56,12 +57,26 @@ void main() async {
             update: (create, ownerUserService, userRepository, previous) {
           return FriendsService(ownerUserService, userRepository);
         }),
-        ProxyProvider3<OwnerUserService, LocalDBEventRepository,
-            FirebaseEventRepository, EventsService>(
-          update: (create, ownerUserService, localDBEventRepository,
-                  firebaseEventRepository, previous) =>
-              EventsService(ownerUserService, localDBEventRepository,
-                  firebaseEventRepository),
+        ProxyProvider5<
+            OwnerUserService,
+            LocalDBEventRepository,
+            FirebaseEventRepository,
+            LocalDBGiftRepository,
+            FirebaseGiftRepository,
+            EventsService>(
+          update: (create,
+                  ownerUserService,
+                  localDBEventRepository,
+                  firebaseEventRepository,
+                  localDBGiftRepository,
+                  firebaseGiftRepository,
+                  previous) =>
+              EventsService(
+                  ownerUserService,
+                  localDBEventRepository,
+                  firebaseEventRepository,
+                  localDBGiftRepository,
+                  firebaseGiftRepository),
         ),
         ProxyProvider3<OwnerUserService, LocalDBGiftRepository,
             FirebaseGiftRepository, GiftsService>(
