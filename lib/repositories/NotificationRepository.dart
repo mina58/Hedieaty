@@ -120,4 +120,13 @@ class NotificationRepository {
       print("Error adding notification to Firebase: $e");
     }
   }
+
+  Stream<int> notificationCountStream(User user) {
+    final CollectionReference notificationsRef = _firestore
+        .collection('users')
+        .doc(user.id)
+        .collection('notifications');
+
+    return notificationsRef.snapshots().map((snapshot) => snapshot.docs.length);
+  }
 }

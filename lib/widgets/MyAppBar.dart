@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/services/NotificationsService.dart';
+import 'package:provider/provider.dart';
+
+import 'NotificationButton.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({
@@ -36,16 +40,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         "Hedieaty",
       ),
       actions: [
-        if (showNotificationsButton)
-          IconButton(
-            icon: Icon(
-              Icons.notifications,
-              color: theme.colorScheme.onPrimary,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, "/notifications");
-            },
-          ),
+        if (showNotificationsButton) NotificationButton(),
         if (displayProfile)
           InkWell(
             child: const CircleAvatar(

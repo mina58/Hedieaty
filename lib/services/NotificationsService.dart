@@ -40,4 +40,9 @@ class NotificationsService {
     final user = await _ownerUserService.getOwner();
     await _notificationRepository.deleteAllFromLocalDB(user);
   }
+
+  Stream<int> notificationCountStream() async* {
+    final user = await _ownerUserService.getOwner();
+    yield* _notificationRepository.notificationCountStream(user);
+  }
 }
