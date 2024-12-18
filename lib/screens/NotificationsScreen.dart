@@ -5,6 +5,7 @@ import 'package:hedieaty/widgets/MyAppBar.dart';
 import 'package:provider/provider.dart';
 
 import '../models/MyNotification.dart';
+import '../widgets/NotificationListener.dart';
 import '../widgets/NotificationWidget.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -56,27 +57,32 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         displayProfile: true,
         showNotificationsButton: false,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton.icon(
-              onPressed: _clearNotifications,
-              icon: Icon(Icons.delete, color: theme.colorScheme.onError,),
-              label: Text('Clear Notifications', style: TextStyle(color: theme.colorScheme.onError),),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.error,
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton.icon(
+                  onPressed: _clearNotifications,
+                  icon: Icon(Icons.delete, color: theme.colorScheme.onError,),
+                  label: Text('Clear Notifications', style: TextStyle(color: theme.colorScheme.onError),),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.error,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: AsyncListView(
-              future: _notifications,
-              builder: (notification) => NotificationWidget(
-                notification: notification,
+              Expanded(
+                child: AsyncListView(
+                  future: _notifications,
+                  builder: (notification) => NotificationWidget(
+                    notification: notification,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
+          MyNotificationListener(),
         ],
       ),
     );

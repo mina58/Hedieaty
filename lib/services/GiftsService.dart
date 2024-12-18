@@ -40,9 +40,9 @@ class GiftsService {
         gifts.sort(
             (a, b) => a.name.compareTo(b.name)); // Sort alphabetically by name
         break;
-      case 'date':
+      case 'category':
         // Sort by event date, assuming `event.date` is what you want
-        gifts.sort((a, b) => a.event.date.compareTo(b.event.date));
+        gifts.sort((a, b) => a.category.compareTo(b.category));
         break;
       case 'status':
         // Sort by pledge status (isPledged: false -> true)

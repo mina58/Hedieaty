@@ -3,6 +3,7 @@ import 'package:hedieaty/services/GiftsService.dart';
 import 'package:hedieaty/widgets/AsyncListView.dart';
 import 'package:hedieaty/widgets/MyAppBar.dart';
 import 'package:hedieaty/widgets/MyCard.dart';
+import 'package:hedieaty/widgets/NotificationListener.dart';
 import 'package:provider/provider.dart';
 
 import '../models/Gift.dart';
@@ -17,13 +18,18 @@ class PledgedGiftsScreen extends StatelessWidget {
     Future<List<Gift>> pledgedGifts = giftsService.getOwnerPledgedGifts();
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: AsyncListView(
-            future: pledgedGifts,
-            builder: (pledgedGift) {
-              return PledgedGiftCard(gift: pledgedGift);
-            }),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: AsyncListView(
+                future: pledgedGifts,
+                builder: (pledgedGift) {
+                  return PledgedGiftCard(gift: pledgedGift);
+                }),
+          ),
+          MyNotificationListener(),
+        ],
       ),
     );
   }

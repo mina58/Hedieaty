@@ -9,6 +9,7 @@ import '../widgets/AsyncListView.dart';
 import '../widgets/HomeScreenCard.dart';
 import '../widgets/HomeSearchRow.dart';
 import '../widgets/MyAppBar.dart';
+import '../widgets/NotificationListener.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -45,45 +46,50 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: MyAppBar(
         displayProfile: true,
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: HomeSearchRow(
-              controller: _searchController,
-              onSearchChanged: _searchFriends,
-              onAddFriend: () {
-                setState(() {
-                  _loadFriends();
-                });
-              },
-            ),
-          ),
-          Expanded(
-            child: AsyncListView(
-              future: _friendsFuture,
-              builder: (friend) => HomeScreenCard(
-                friend: friend,
-                onAvatarTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    "/friend_profile",
-                    arguments: FriendProfileScreenArguments(friend),
-                  );
-                },
-                onTap: () {
-                  Navigator.pushNamed(
-                    context,
-                    "/event_list",
-                    arguments: EventListScreenArguments(
-                      false,
-                      friend,
-                    ),
-                  );
-                },
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: HomeSearchRow(
+                  controller: _searchController,
+                  onSearchChanged: _searchFriends,
+                  onAddFriend: () {
+                    setState(() {
+                      _loadFriends();
+                    });
+                  },
+                ),
               ),
-            ),
+              Expanded(
+                child: AsyncListView(
+                  future: _friendsFuture,
+                  builder: (friend) => HomeScreenCard(
+                    friend: friend,
+                    onAvatarTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        "/friend_profile",
+                        arguments: FriendProfileScreenArguments(friend),
+                      );
+                    },
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        "/event_list",
+                        arguments: EventListScreenArguments(
+                          false,
+                          friend,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
+          MyNotificationListener(),
         ],
       ),
     );

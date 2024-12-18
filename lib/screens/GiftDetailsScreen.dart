@@ -4,6 +4,7 @@ import 'package:hedieaty/routingArguments/GiftDetailsScreenArguments.dart';
 import 'package:hedieaty/widgets/MyAppBar.dart';
 
 import '../models/Gift.dart';
+import '../widgets/NotificationListener.dart';
 
 class GiftDetailsScreen extends StatelessWidget {
   @override
@@ -15,50 +16,55 @@ class GiftDetailsScreen extends StatelessWidget {
     final Gift gift = arguments.gift;
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    Image.network(
-                      gift.imageURL,
-                      height: 200,
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          gift.name,
-                          style: TextStyle(
-                              fontSize: theme.textTheme.titleLarge!.fontSize),
+                        Image.network(
+                          gift.imageURL,
+                          height: 200,
                         ),
-                        Text(
-                          "\$${gift.price}",
-                          style: TextStyle(
-                              fontSize: theme.textTheme.titleLarge!.fontSize),
-                        )
                       ],
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              gift.name,
+                              style: TextStyle(
+                                  fontSize: theme.textTheme.titleLarge!.fontSize),
+                            ),
+                            Text(
+                              "\$${gift.price}",
+                              style: TextStyle(
+                                  fontSize: theme.textTheme.titleLarge!.fontSize),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Text(gift.description)
+                  ],
                 ),
-                Text(gift.description)
               ],
             ),
-          ],
-        ),
+          ),
+          MyNotificationListener(),
+        ],
       ),
     );
   }

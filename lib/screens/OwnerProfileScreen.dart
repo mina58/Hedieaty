@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../models/User.dart';
 import '../widgets/EditButton.dart';
+import '../widgets/NotificationListener.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   const OwnerProfileScreen({super.key});
@@ -24,24 +25,29 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: false),
-      body: FutureBuilder(
-        future: user,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            return OwnerProfileContent(
-              user: snapshot.data!,
-              ownerUserService: ownerUserService,
-              onUpdate: () {
-                setState(() {});
-              }, // Pass the service here
-            );
-          } else {
-            return Text("Failed to get user");
-          }
-        },
+      body: Stack(
+        children: [
+          FutureBuilder(
+            future: user,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                return OwnerProfileContent(
+                  user: snapshot.data!,
+                  ownerUserService: ownerUserService,
+                  onUpdate: () {
+                    setState(() {});
+                  }, // Pass the service here
+                );
+              } else {
+                return Text("Failed to get user");
+              }
+            },
+          ),
+          MyNotificationListener(),
+        ],
       ),
     );
   }

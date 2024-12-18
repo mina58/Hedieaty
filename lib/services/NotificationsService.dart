@@ -46,4 +46,10 @@ class NotificationsService {
     final user = await _ownerUserService.getOwner();
     yield* _notificationRepository.notificationCountStream(user);
   }
+
+  Stream<MyNotification> notificationListener() {
+    return _ownerUserService.getOwner().asStream().asyncExpand(
+          (user) => _notificationRepository.listenForNewNotifications(user),
+    );
+  }
 }

@@ -131,4 +131,34 @@ class NotificationRepository {
 
     return notificationsRef.snapshots().map((snapshot) => snapshot.docs.length);
   }
+
+  Stream<MyNotification> listenForNewNotifications(User user) {
+    final CollectionReference notificationsRef = _firestore
+        .collection('users')
+        .doc(user.id)
+        .collection('notifications');
+
+    return notificationsRef.snapshots().expand((snapshot) {
+      final currentTime = DateTime.now();
+      return snapshot.docChanges
+          .where((change) => change.type == DocumentChangeType.added)
+          .map((change) {
+        final data = change.doc.data() as Map<String, dynamic>;
+        final notificationTime = DateTime.parse(data['dateTime']);
+
+        // Filter notifications within the last 5 seconds
+        if (currentTime.difference(notificationTime).inSeconds <= 5) {
+          return MyNotification(
+            data['title'] as String,
+            data['message'] as String,
+            notificationTime,
+          );
+        }
+        return null; // Skip notifications older than 5 seconds
+      })
+          .where((notification) => notification != null)
+          .cast<MyNotification>(); // Ensure non-null notifications are returned
+    });
+  }
+
 }

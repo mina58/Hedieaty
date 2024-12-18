@@ -15,6 +15,7 @@ import '../models/Event.dart';
 import '../models/Gift.dart';
 import '../models/User.dart';
 import '../services/EventsService.dart';
+import '../widgets/NotificationListener.dart';
 import '../widgets/SortByOption.dart';
 
 class EventScreen extends StatefulWidget {
@@ -58,42 +59,47 @@ class _EventScreenState extends State<EventScreen> {
 
     return Scaffold(
       appBar: MyAppBar(displayProfile: true),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            EventScreenHeader(
-              theme: theme,
-              isOwnerEvent: isOwnerEvent,
-              username: user.name,
-              event: event,
-              onAddGiftPressed: _loadGifts,
-              onEditEvent: (newEvent) {
-                setState(() {
-                  event = newEvent;
-                });
-              },
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                EventScreenHeader(
+                  theme: theme,
+                  isOwnerEvent: isOwnerEvent,
+                  username: user.name,
+                  event: event,
+                  onAddGiftPressed: _loadGifts,
+                  onEditEvent: (newEvent) {
+                    setState(() {
+                      event = newEvent;
+                    });
+                  },
+                ),
+                const SizedBox(height: 8),
+                SortOptionsWidget(
+                  currentSortBy: _sortBy,
+                  onSortChange: (sortBy) {
+                    setState(() {
+                      _sortBy = sortBy;
+                      _loadGifts();
+                    });
+                  },
+                ),
+                Expanded(
+                  child: GiftsList(
+                    giftsFuture: _gifts,
+                    isOwnerEvent: isOwnerEvent,
+                    onPledge: _loadGifts,
+                    onEdit: _loadGifts,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            SortOptionsWidget(
-              currentSortBy: _sortBy,
-              onSortChange: (sortBy) {
-                setState(() {
-                  _sortBy = sortBy;
-                  _loadGifts();
-                });
-              },
-            ),
-            Expanded(
-              child: GiftsList(
-                giftsFuture: _gifts,
-                isOwnerEvent: isOwnerEvent,
-                onPledge: _loadGifts,
-                onEdit: _loadGifts,
-              ),
-            ),
-          ],
-        ),
+          ),
+          MyNotificationListener(),
+        ],
       ),
     );
   }
@@ -332,8 +338,7 @@ class EventScreenHeader extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                if (_formKey.currentState?.validate() == true &&
-                    _selectedImage != null) {
+                if (_formKey.currentState?.validate() == true) {
                   final giftsService =
                       Provider.of<GiftsService>(context, listen: false);
                   await giftsService.addGift(
@@ -343,14 +348,10 @@ class EventScreenHeader extends StatelessWidget {
                     description: _descriptionController.text.trim(),
                     category: _categoryController.text.trim(),
                     imageUrl:
-                        _selectedImage!.path, // Use file path as image URL
+                        _selectedImage?.path ?? "https://hedieaty.s3.us-east-1.amazonaws.com/download.jpg", // Use file path as image URL
                   );
                   Navigator.of(context).pop();
                   onAddGiftPressed();
-                } else if (_selectedImage == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Please upload an image')),
-                  );
                 }
               },
               child: Text('Add Gift'),
@@ -417,8 +418,8 @@ class SortOptionsWidget extends StatelessWidget {
           onTap: () => onSortChange("name"),
         ),
         SortByOption(
-          text: "date",
-          onTap: () => onSortChange("date"),
+          text: "category",
+          onTap: () => onSortChange("category"),
         ),
         SortByOption(
           text: "status",
