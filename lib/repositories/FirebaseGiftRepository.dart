@@ -107,7 +107,7 @@ class FirebaseGiftRepository {
             .data()!;
 
         Event event = Event(
-            eventData["id"] as String,
+            eventData["id"].toString(),
             eventData["name"] as String,
             DateTime.parse(eventData["date"]),
             true,

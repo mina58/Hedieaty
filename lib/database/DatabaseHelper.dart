@@ -74,6 +74,17 @@ class DatabaseHelper {
         );
       ''');
 
+        await db.execute('''
+        CREATE TABLE IF NOT EXISTS notifications(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id TEXT NOT NULL,
+          title TEXT NOT NULL,
+          message TEXT NOT NULL,
+          timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+      ''');
+
         // Enable foreign key constraints
         await db.execute('PRAGMA foreign_keys = ON;');
       },
