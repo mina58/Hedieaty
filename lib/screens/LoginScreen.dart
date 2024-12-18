@@ -37,7 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(displayProfile: false, showLogoutButton: false,),
+      appBar: MyAppBar(
+        displayProfile: false,
+        showLogoutButton: false,
+        showNotificationsButton: false,
+      ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Form(
@@ -50,14 +54,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter an email' : null,
+                    value!.isEmpty ? 'Please enter an email' : null,
               ),
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter a password' : null,
+                    value!.isEmpty ? 'Please enter a password' : null,
               ),
               SizedBox(height: 20),
               ElevatedButton(

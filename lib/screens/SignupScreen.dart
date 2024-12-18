@@ -55,7 +55,11 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(displayProfile: false, showLogoutButton: false),
+      appBar: MyAppBar(
+        displayProfile: false,
+        showLogoutButton: false,
+        showNotificationsButton: false,
+      ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Form(
@@ -67,14 +71,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username'),
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter a username' : null,
+                    value!.isEmpty ? 'Please enter a username' : null,
               ),
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter an email' : null,
+                    value!.isEmpty ? 'Please enter an email' : null,
               ),
               TextFormField(
                 controller: _passwordController,
@@ -89,7 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(labelText: 'Phone Number'),
                 validator: (value) =>
-                value!.isEmpty ? 'Please enter a phone number' : null,
+                    value!.isEmpty ? 'Please enter a phone number' : null,
               ),
               SizedBox(height: 20),
               ElevatedButton(

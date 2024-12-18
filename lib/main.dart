@@ -12,12 +12,14 @@ import 'package:hedieaty/screens/FriendProfileScreen.dart';
 import 'package:hedieaty/screens/GiftDetailsScreen.dart';
 import 'package:hedieaty/screens/HomeScreen.dart';
 import 'package:hedieaty/screens/LoginScreen.dart';
+import 'package:hedieaty/screens/NotificationsScreen.dart';
 import 'package:hedieaty/screens/OwnerProfileScreen.dart';
 import 'package:hedieaty/screens/PledgedGiftsScreen.dart';
 import 'package:hedieaty/screens/SignupScreen.dart';
 import 'package:hedieaty/services/EventsService.dart';
 import 'package:hedieaty/services/FriendsService.dart';
 import 'package:hedieaty/services/GiftsService.dart';
+import 'package:hedieaty/services/NotificationsService.dart';
 import 'package:hedieaty/services/OwnerUserService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +51,9 @@ void main() async {
           update: (context, userRepository, previous) {
             return FirebaseEventRepository(userRepository);
           },
+        ),
+        Provider(
+          create: (_) => NotificationsService(),
         ),
         Provider<OwnerUserService>(
           create: (_) => OwnerUserService(),
@@ -119,6 +124,7 @@ class MyApp extends StatelessWidget {
         "/pledged_gifts": (context) => PledgedGiftsScreen(),
         "/login": (context) => LoginScreen(),
         "/signup": (context) => SignupScreen(),
+        "/notifications": (context) => NotificationsScreen(),
       },
       home: AuthWrapper(), // Use AuthWrapper to decide the initial screen
     );

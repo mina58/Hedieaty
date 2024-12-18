@@ -5,11 +5,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({
     super.key,
     required this.displayProfile,
-    this.showLogoutButton = true, // Default to true
+    this.showLogoutButton = true,
+    this.showNotificationsButton = true,
   });
 
   final bool displayProfile;
   final bool showLogoutButton;
+  final bool showNotificationsButton;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         "Hedieaty",
       ),
       actions: [
+        if (showNotificationsButton)
+          IconButton(
+            icon: Icon(
+              Icons.notifications,
+              color: theme.colorScheme.onPrimary,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, "/notifications");
+            },
+          ),
         if (displayProfile)
           InkWell(
             child: const CircleAvatar(
@@ -45,10 +57,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         if (showLogoutButton)
           IconButton(
-            icon: Icon(Icons.logout, color: theme.colorScheme.onPrimary,),
+            icon: Icon(
+              Icons.logout,
+              color: theme.colorScheme.onPrimary,
+            ),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              Navigator.pushNamedAndRemoveUntil(context, "/login", (_) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, "/login", (_) => false);
             },
           ),
       ],
