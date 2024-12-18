@@ -147,7 +147,7 @@ class NotificationRepository {
         final notificationTime = DateTime.parse(data['dateTime']);
 
         // Filter notifications within the last 5 seconds
-        if (currentTime.difference(notificationTime).inSeconds <= 5) {
+        if (currentTime.difference(notificationTime).inSeconds <= 50) {
           return MyNotification(
             data['title'] as String,
             data['message'] as String,

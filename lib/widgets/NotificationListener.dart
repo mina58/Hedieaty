@@ -36,6 +36,7 @@ class _MyNotificationListenerState extends State<MyNotificationListener> {
 
     notificationsService.notificationListener().listen((notification) {
       print(notification);
+      print("aloo");
       _showNotificationBanner(notification);
     });
   }
