@@ -2,16 +2,23 @@ import 'package:hedieaty/models/Event.dart';
 import 'package:hedieaty/models/User.dart';
 import 'package:hedieaty/repositories/FirebaseGiftRepository.dart';
 import 'package:hedieaty/repositories/LocalDBGiftRepository.dart';
+import 'package:hedieaty/repositories/NotificationRepository.dart';
 import 'package:hedieaty/services/OwnerUserService.dart';
 import '../models/Gift.dart';
+import '../models/MyNotification.dart';
 
 class GiftsService {
-  GiftsService(this._ownerUserService, this._localDBGiftRepository,
-      this._firebaseGiftRepository);
+  GiftsService(
+    this._ownerUserService,
+    this._localDBGiftRepository,
+    this._firebaseGiftRepository,
+    this._notificationRepository,
+  );
 
   final OwnerUserService _ownerUserService;
   final LocalDBGiftRepository _localDBGiftRepository;
   final FirebaseGiftRepository _firebaseGiftRepository;
+  final NotificationRepository _notificationRepository;
 
   Future<List<Gift>> getEventGifts(Event event, String sortBy) async {
     List<Gift> gifts;
@@ -93,6 +100,17 @@ class GiftsService {
     final User owner = await _ownerUserService.getOwner();
     try {
       await _firebaseGiftRepository.pledgeGift(gift, owner);
+
+      // Create a notification for the gift owner
+      final MyNotification notification = MyNotification(
+        "Gift Pledged",
+        "${owner.name} has pledged your gift: ${gift.name}",
+      );
+
+      // Send the notification to the gift owner
+      await _notificationRepository.addToFirebase(
+          gift.event.owner, notification);
+
       return true;
     } catch (e) {
       return false;

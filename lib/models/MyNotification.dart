@@ -1,6 +1,6 @@
 class MyNotification {
-  MyNotification(this.title, this.body);
+  MyNotification(this.title, this.message);
 
   final String title;
-  final String body;
+  final String message;
 }

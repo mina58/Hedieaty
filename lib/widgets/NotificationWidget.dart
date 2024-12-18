@@ -22,7 +22,7 @@ class NotificationWidget extends StatelessWidget {
             notification.title,
             style: theme.textTheme.titleMedium,
           ),
-          Text(notification.body),
+          Text(notification.message),
         ],
       ),
     );

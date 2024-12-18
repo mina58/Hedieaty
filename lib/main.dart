@@ -90,12 +90,12 @@ void main() async {
                   localDBGiftRepository,
                   firebaseGiftRepository),
         ),
-        ProxyProvider3<OwnerUserService, LocalDBGiftRepository,
-            FirebaseGiftRepository, GiftsService>(
+        ProxyProvider4<OwnerUserService, LocalDBGiftRepository,
+            FirebaseGiftRepository, NotificationRepository, GiftsService>(
           update: (create, ownerUserService, localDBGiftRepository,
-                  firebaseGiftRepository, previous) =>
+                  firebaseGiftRepository, notificationRepository, previous) =>
               GiftsService(ownerUserService, localDBGiftRepository,
-                  firebaseGiftRepository),
+                  firebaseGiftRepository, notificationRepository),
         ),
         Provider<ThemeData>(
           create: (_) => ThemeData(
