@@ -21,6 +21,7 @@ class NotificationRepository {
         return MyNotification(
           data['title'] as String,
           data['message'] as String,
+          DateTime.parse(data['dateTime']),
         );
       }).toList();
     } catch (e) {
@@ -44,6 +45,7 @@ class NotificationRepository {
         return MyNotification(
           row['title'] as String,
           row['message'] as String,
+          DateTime.parse(row['timestamp'] as String)
         );
       }).toList();
     } catch (e) {
@@ -96,7 +98,7 @@ class NotificationRepository {
         'user_id': user.id,
         'title': notification.title,
         'message': notification.message,
-        'timestamp': DateTime.now().toIso8601String(),
+        'timestamp': notification.dateTime.toIso8601String(),
       });
     } catch (e) {
       print("Error adding notification to local DB: $e");
@@ -114,7 +116,7 @@ class NotificationRepository {
       await userNotifications.add({
         'title': notification.title,
         'message': notification.message,
-        'timestamp': Timestamp.now(),
+        'dateTime': DateTime.now().toIso8601String(),
       });
     } catch (e) {
       print("Error adding notification to Firebase: $e");

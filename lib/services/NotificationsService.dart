@@ -28,6 +28,7 @@ class NotificationsService {
       // Step 4: Retrieve all notifications from local storage and return
       List<MyNotification> localNotifications =
           await _notificationRepository.getAllFromLocalDB(user);
+      localNotifications.sort((a, b) => b.dateTime.compareTo(a.dateTime));
       return localNotifications;
     } catch (e) {
       // Handle errors (e.g., network issues, Firebase errors, etc.)

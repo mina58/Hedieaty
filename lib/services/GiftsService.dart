@@ -105,6 +105,7 @@ class GiftsService {
       final MyNotification notification = MyNotification(
         "Gift Pledged",
         "${owner.name} has pledged your gift: ${gift.name}",
+        DateTime.now(),
       );
 
       // Send the notification to the gift owner
