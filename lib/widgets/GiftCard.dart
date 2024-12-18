@@ -28,11 +28,34 @@ class GiftCard extends StatefulWidget {
 
 class _GiftCardState extends State<GiftCard> {
   late bool _isPledged;
+  late Gift gift;
+  Stream<Gift>? giftStream;
 
   @override
   void initState() {
     super.initState();
     _isPledged = widget.gift.isPledged;
+    gift = widget.gift;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Set up the gift stream only if the event is published
+    if (gift.event.isPublished) {
+      final GiftsService giftsService =
+          Provider.of<GiftsService>(context, listen: false);
+      giftStream = giftsService.streamGift(gift);
+
+      // Listen to the stream to update the gift state when changes occur
+      giftStream?.listen((updatedGift) {
+        setState(() {
+          gift = updatedGift;
+          _isPledged = updatedGift.isPledged;
+        });
+      });
+    }
   }
 
   void _handleEdit() {
@@ -125,7 +148,7 @@ class _GiftCardState extends State<GiftCard> {
               child: Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () async{
+              onPressed: () async {
                 if (_formKey.currentState?.validate() == true) {
                   final giftsService =
                       Provider.of<GiftsService>(context, listen: false);
@@ -217,7 +240,7 @@ class _GiftCardState extends State<GiftCard> {
               backgroundColor: theme.colorScheme.secondaryContainer,
               child: CircleAvatar(
                 child: Image.network(widget.gift.pledgedBy?.imageUrl ??
-                    "https://avatar.iran.liara.run/public/default_avatar.png"),
+                    "https://avatar.iran.liara.run/public/"),
               ),
             ),
           ),

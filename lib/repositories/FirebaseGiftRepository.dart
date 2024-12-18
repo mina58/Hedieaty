@@ -174,4 +174,48 @@ class FirebaseGiftRepository {
       throw Exception("Failed to add gift to event ${gift.event.id}: $e");
     }
   }
+
+  Stream<Gift> streamGift(Gift gift) {
+    try {
+      // Reference to the specific gift document in Firestore
+      DocumentReference giftDocRef = _firestore
+          .collection('users')
+          .doc(gift.event.owner.id)
+          .collection('events')
+          .doc(gift.event.id)
+          .collection('gifts')
+          .doc(gift.id);
+
+      // Listen to real-time updates on the gift document
+      return giftDocRef.snapshots().asyncMap((snapshot) async {
+        if (!snapshot.exists) {
+          throw Exception("Gift with ID ${gift.id} does not exist");
+        }
+
+        final data = snapshot.data() as Map<String, dynamic>;
+
+        // Retrieve the pledged user, if available
+        User? pledgedBy;
+        if (data['pledged_by'] != null) {
+          pledgedBy =
+          await _userRepository.getUserByIdFromFirebase(data['pledged_by']);
+        }
+
+        // Return the updated Gift object
+        return Gift(
+          gift.id,
+          data['name'] as String,
+          data['price'] as int,
+          data['description'] as String,
+          gift.event,
+          true,
+          pledgedBy,
+          data['category'] as String,
+          data['image_url'] as String,
+        );
+      });
+    } catch (e) {
+      throw Exception("Failed to stream gift with ID ${gift.id}: $e");
+    }
+  }
 }

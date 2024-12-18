@@ -143,4 +143,8 @@ class GiftsService {
       await _localDBGiftRepository.updateGift(newGift);
     }
   }
+
+  Stream<Gift> streamGift(Gift gift) {
+    return _firebaseGiftRepository.streamGift(gift);
+  }
 }
