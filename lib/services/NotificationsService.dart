@@ -1,21 +1,43 @@
+import 'package:hedieaty/repositories/NotificationRepository.dart';
+import 'package:hedieaty/services/OwnerUserService.dart';
+
 import '../models/MyNotification.dart';
 
 class NotificationsService {
+  NotificationsService(this._ownerUserService, this._notificationRepository);
+
+  final OwnerUserService _ownerUserService;
+  final NotificationRepository _notificationRepository;
+
   Future<List<MyNotification>> getNotifications() async {
-    await Future.delayed(Duration(milliseconds: 100));
-    return <MyNotification>[
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-      MyNotification("New Pledge", "peepeeepepee"),
-    ];
+    final user = await _ownerUserService.getOwner();
+    try {
+      // Step 1: Retrieve notifications from Firebase
+      List<MyNotification> firebaseNotifications =
+          await _notificationRepository.getAllFromFirebase(user);
+
+      // Step 2: Delete notifications from Firebase
+      await _notificationRepository.deleteAllFromFirebase(user);
+
+      // Step 3: Add the retrieved notifications to local storage
+      for (var notification in firebaseNotifications) {
+        // Assuming the repository handles adding to local storage
+        await _notificationRepository.addToLocalDB(user, notification);
+      }
+
+      // Step 4: Retrieve all notifications from local storage and return
+      List<MyNotification> localNotifications =
+          await _notificationRepository.getAllFromLocalDB(user);
+      return localNotifications;
+    } catch (e) {
+      // Handle errors (e.g., network issues, Firebase errors, etc.)
+      print("Error in getNotifications: $e");
+      return [];
+    }
   }
 
   Future<void> clearNotifications() async {
-    await Future.delayed(Duration(milliseconds: 100));
+    final user = await _ownerUserService.getOwner();
+    await _notificationRepository.deleteAllFromLocalDB(user);
   }
 }

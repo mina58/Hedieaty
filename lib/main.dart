@@ -5,6 +5,7 @@ import 'package:hedieaty/repositories/FirebaseEventRepository.dart';
 import 'package:hedieaty/repositories/FirebaseGiftRepository.dart';
 import 'package:hedieaty/repositories/LocalDBGiftRepository.dart';
 import 'package:hedieaty/repositories/LocalDBEventRepository.dart';
+import 'package:hedieaty/repositories/NotificationRepository.dart';
 import 'package:hedieaty/repositories/UserRepository.dart';
 import 'package:hedieaty/screens/EventListScreen.dart';
 import 'package:hedieaty/screens/EventScreen.dart';
@@ -31,6 +32,9 @@ void main() async {
     MultiProvider(
       providers: [
         Provider(
+          create: (_) => NotificationRepository(),
+        ),
+        Provider(
           create: (_) => UserRepository(),
         ),
         ProxyProvider<UserRepository, LocalDBEventRepository>(
@@ -52,11 +56,14 @@ void main() async {
             return FirebaseEventRepository(userRepository);
           },
         ),
-        Provider(
-          create: (_) => NotificationsService(),
-        ),
         Provider<OwnerUserService>(
           create: (_) => OwnerUserService(),
+        ),
+        ProxyProvider2<OwnerUserService, NotificationRepository,
+            NotificationsService>(
+          update: (create, ownerUserService, notificationRepository,
+                  previous) =>
+              NotificationsService(ownerUserService, notificationRepository),
         ),
         ProxyProvider2<OwnerUserService, UserRepository, FriendsService>(
             update: (create, ownerUserService, userRepository, previous) {
