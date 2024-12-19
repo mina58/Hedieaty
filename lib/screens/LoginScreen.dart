@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hedieaty/widgets/MyAppBar.dart';
 
-import 'SignupScreen.dart';
-
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -42,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         showLogoutButton: false,
         showNotificationsButton: false,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
@@ -50,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
+                key: const Key('login_email_field'),
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(labelText: 'Email'),
@@ -57,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     value!.isEmpty ? 'Please enter an email' : null,
               ),
               TextFormField(
+                key: const Key('login_password_field'),
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
@@ -65,10 +65,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
+                key: const Key('login_button'),
                 onPressed: _login,
                 child: Text('Login'),
               ),
               TextButton(
+                key: const Key('signup_navigation_button'),
                 onPressed: () {
                   Navigator.pushNamed(
                     context,

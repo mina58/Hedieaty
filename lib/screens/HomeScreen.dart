@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: HomeSearchRow(
+                  key: Key("home_search_row"),
                   controller: _searchController,
                   onSearchChanged: _searchFriends,
                   onAddFriend: () {

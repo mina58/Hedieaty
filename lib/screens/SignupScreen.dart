@@ -60,7 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
         showLogoutButton: false,
         showNotificationsButton: false,
       ),
-      body: Padding(
+      body: SingleChildScrollView( // Add this wrapper
         padding: EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
@@ -68,19 +68,22 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
+                key: const Key('signup_username_field'),
                 controller: _usernameController,
                 decoration: InputDecoration(labelText: 'Username'),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter a username' : null,
+                value!.isEmpty ? 'Please enter a username' : null,
               ),
               TextFormField(
+                key: const Key('signup_email_field'),
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(labelText: 'Email'),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter an email' : null,
+                value!.isEmpty ? 'Please enter an email' : null,
               ),
               TextFormField(
+                key: const Key('signup_password_field'),
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(labelText: 'Password'),
@@ -89,14 +92,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     : null,
               ),
               TextFormField(
+                key: const Key('signup_phone_field'),
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(labelText: 'Phone Number'),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter a phone number' : null,
+                value!.isEmpty ? 'Please enter a phone number' : null,
               ),
               SizedBox(height: 20),
               ElevatedButton(
+                key: const Key('signup_button'),
                 onPressed: _register,
                 child: Text('Sign Up'),
               ),

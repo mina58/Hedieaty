@@ -121,7 +121,6 @@ class MyApp extends StatelessWidget {
       darkTheme: Provider.of<ThemeData>(context),
       themeMode: ThemeMode.dark,
       title: 'Flutter Navigation Demo',
-      initialRoute: '/',
       routes: {
         '/event_list': (context) => EventListScreen(),
         '/event': (context) => EventScreen(),
