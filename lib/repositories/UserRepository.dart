@@ -34,8 +34,13 @@ class UserRepository {
         .collection("events")
         .get();
 
-    // Count the number of events for the user
-    final upcomingEvents = eventsResult.docs.length;
+    // Filter events to count only those with dates in the future
+    final now = DateTime.now();
+    final upcomingEvents = eventsResult.docs.where((eventDoc) {
+      final eventData = eventDoc.data();
+      final eventDate = DateTime.parse(eventData["date"]);
+      return eventDate.isAfter(now);
+    }).length;
 
     // Return the User object with relevant information
     return User(
