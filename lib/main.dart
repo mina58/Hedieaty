@@ -105,6 +105,12 @@ void main() async {
             ),
             useMaterial3: true,
             textTheme: TextTheme(),
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CustomPageTransitionBuilder(),
+                TargetPlatform.iOS: CustomPageTransitionBuilder(),
+              },
+            )
           ),
         ),
       ],
@@ -161,3 +167,17 @@ class AuthWrapper extends StatelessWidget {
     );
   }
 }
+
+class CustomPageTransitionBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+      PageRoute<T> route,
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+      ) {
+    return FadeTransition(opacity: animation, child: child);
+  }
+}
+
