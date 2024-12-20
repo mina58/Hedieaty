@@ -1,16 +1,3 @@
 # hedieaty
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Hedieaty is an app that allows the user to share his/her gifts wish list with his/her friends. The app allows the user to create events and add gifts to these events. The user can then publish these events for all his/her friends to see. The user can add friends and be able to view the events and gifts they have published and can pledge to buy that gift from the app.
